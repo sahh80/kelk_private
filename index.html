@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کلک دبیر | گنجینه خوشنویسی فارسی</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>کلک دبیر</h1>
+    <p>گنجینه‌ای از خوشنویسی و ادبیات فارسی</p>
+</header>
+
+<main>
+
+    <section class="search-box">
+        <input
+            id="search"
+            type="text"
+            placeholder="جستجو در شعر، شاعر، خوشنویس و هشتگ..."
+        >
+
+        <div class="filters">
+            <select id="poetFilter">
+                <option value="">همه شاعران</option>
+            </select>
+
+            <select id="artistFilter">
+                <option value="">همه خوشنویسان</option>
+            </select>
+
+            <select id="formatFilter">
+                <option value="">همه قالب‌ها</option>
+            </select>
+        </div>
+    </section>
+
+    <div id="count"></div>
+
+    <section id="gallery"></section>
+
+</main>
+
+<script src="app.js"></script>
+
+</body>
+</html>

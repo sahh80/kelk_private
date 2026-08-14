@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f7f4ee;
+    color: #29251f;
+    font-family: Tahoma, Arial, sans-serif;
+}
+
+header {
+    text-align: center;
+    padding: 55px 20px 35px;
+    border-bottom: 1px solid #ddd6c9;
+}
+
+header h1 {
+    font-family: Georgia, serif;
+    font-size: 42px;
+    margin: 0 0 12px;
+}
+
+header p {
+    font-size: 17px;
+    color: #777;
+}
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.search-box {
+    margin-bottom: 30px;
+}
+
+#search {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid #d5cec2;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+select {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #d5cec2;
+    border-radius: 7px;
+    background: white;
+}
+
+#count {
+    margin-bottom: 20px;
+    color: #777;
+}
+
+#gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e1dbd0;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.card img {
+    width: 100%;
+    height: 330px;
+    object-fit: contain;
+    background: #eeeae2;
+}
+
+.card-content {
+    padding: 18px;
+}
+
+.poem {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    line-height: 2;
+    margin-bottom: 15px;
+}
+
+.tags {
+    color: #777;
+    font-size: 13px;
+    line-height: 2;
+}
+
+@media (max-width: 700px) {
+    .filters {
+        flex-direction: column;
+    }
+}
