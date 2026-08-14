@@ -4,32 +4,32 @@
 
 body {
     margin: 0;
-    background: #f7f4ee;
+    background: #f5f1e8;
     color: #29251f;
     font-family: Tahoma, Arial, sans-serif;
 }
 
 header {
     text-align: center;
-    padding: 55px 20px 35px;
-    border-bottom: 1px solid #ddd6c9;
+    padding: 60px 20px 40px;
+    border-bottom: 1px solid #ddd5c7;
 }
 
 header h1 {
     font-family: Georgia, serif;
-    font-size: 42px;
+    font-size: 44px;
     margin: 0 0 12px;
 }
 
 header p {
     font-size: 17px;
-    color: #777;
+    color: #756e63;
 }
 
 main {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: auto;
-    padding: 30px 20px;
+    padding: 35px 22px;
 }
 
 .search-box {
@@ -38,55 +38,65 @@ main {
 
 #search {
     width: 100%;
-    padding: 16px 20px;
-    border: 1px solid #d5cec2;
-    border-radius: 8px;
+    padding: 17px 20px;
+    border: 1px solid #d5ccbd;
+    border-radius: 9px;
     font-size: 16px;
     background: white;
+    outline: none;
+}
+
+#search:focus {
+    border-color: #8b7d68;
 }
 
 .filters {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     margin-top: 12px;
 }
 
 select {
-    flex: 1;
-    padding: 12px;
-    border: 1px solid #d5cec2;
-    border-radius: 7px;
+    padding: 13px;
+    border: 1px solid #d5ccbd;
+    border-radius: 8px;
     background: white;
+    font-size: 14px;
 }
 
 #count {
     margin-bottom: 20px;
-    color: #777;
+    color: #766f65;
 }
+
+/* Gallery */
 
 #gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+    gap: 25px;
 }
 
 .card {
     background: white;
-    border-radius: 10px;
+    border: 1px solid #e0d8cc;
+    border-radius: 12px;
     overflow: hidden;
-    border: 1px solid #e1dbd0;
-    transition: transform 0.2s;
+    transition: transform .2s, box-shadow .2s;
 }
 
 .card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
 }
 
 .card img {
     width: 100%;
-    height: 330px;
+    height: 360px;
     object-fit: contain;
     background: #eeeae2;
+    display: block;
 }
 
 .card-content {
@@ -94,20 +104,140 @@ select {
 }
 
 .poem {
-    font-family: Georgia, serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-size: 18px;
-    line-height: 2;
-    margin-bottom: 15px;
+    line-height: 2.05;
+    margin-bottom: 16px;
 }
 
-.tags {
-    color: #777;
+.metadata {
     font-size: 13px;
     line-height: 2;
+    color: #665f56;
+    border-top: 1px solid #eee8df;
+    padding-top: 10px;
 }
 
-@media (max-width: 700px) {
+.metadata strong {
+    color: #37322c;
+}
+
+.view-button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 11px;
+    border: 0;
+    border-radius: 7px;
+    background: #302b25;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.view-button:hover {
+    opacity: .88;
+}
+
+/* Full artwork viewer */
+
+.artwork-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,18,15,.88);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 35px;
+}
+
+.artwork-viewer {
+    max-width: 1100px;
+    margin: auto;
+    background: #f8f5ef;
+    border-radius: 12px;
+    padding: 25px;
+    position: relative;
+}
+
+.close-viewer {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    background: #302b25;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.high-res-image {
+    width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    display: block;
+    background: #e9e4da;
+}
+
+.viewer-info {
+    padding: 25px 10px 10px;
+    line-height: 2;
+}
+
+.viewer-info p {
+    margin: 4px 0;
+}
+
+.viewer-poem {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd5c8;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    line-height: 2.2;
+}
+
+/* Error */
+
+.error {
+    text-align: center;
+    padding: 60px;
+}
+
+/* Mobile */
+
+@media (max-width: 800px) {
+
     .filters {
-        flex-direction: column;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #gallery {
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    }
+
+    .card img {
+        height: 300px;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    #gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .artwork-overlay {
+        padding: 10px;
+    }
+
+    .artwork-viewer {
+        padding: 10px;
     }
 }
