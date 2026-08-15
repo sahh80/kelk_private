@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+html {
+    direction: rtl;
+}
+
 body {
     margin: 0;
     background: #f5f1e8;
@@ -10,168 +14,240 @@ body {
     line-height: 1.8;
 }
 
+
+/* =========================
+   Header
+========================= */
+
 header {
     text-align: center;
-    padding: 55px 20px 40px;
-    border-bottom: 1px solid #ddd5c8;
+    padding: 55px 20px 35px;
+    border-bottom: 1px solid #ddd5c7;
+    background: #f8f5ee;
 }
 
 header h1 {
-    margin: 0 0 10px;
-    font-family: serif;
+    margin: 0;
     font-size: 42px;
+    font-weight: 700;
 }
 
 header p {
-    margin: 0;
-    color: #777;
-    font-size: 17px;
+    margin: 10px 0 0;
+    font-size: 18px;
+    color: #777064;
 }
+
+
+/* =========================
+   Main
+========================= */
 
 main {
-    width: min(1400px, 92%);
-    margin: 35px auto 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 35px 25px 70px;
 }
 
+
+/* =========================
+   Search
+========================= */
+
 .search-box {
-    background: #fff;
-    border: 1px solid #e0d8cc;
-    border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 #search {
     width: 100%;
     height: 54px;
-    padding: 0 18px;
-    border: 1px solid #d8d0c4;
-    border-radius: 9px;
-    font-size: 16px;
+    padding: 0 20px;
+    border: 1px solid #d8d0c2;
+    border-radius: 10px;
+    background: white;
     font-family: inherit;
-    direction: rtl;
+    font-size: 16px;
+    outline: none;
 }
+
+#search:focus {
+    border-color: #a89b87;
+}
+
+
+/* =========================
+   Filters
+========================= */
 
 .filters {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
-    margin-top: 18px;
+    margin-top: 15px;
 }
 
 .filters select {
+    width: 100%;
     height: 48px;
-    padding: 0 14px;
-    border: 1px solid #d8d0c4;
-    border-radius: 9px;
-    background: #fff;
+    padding: 0 15px;
+    border: 1px solid #d8d0c2;
+    border-radius: 10px;
+    background: white;
     font-family: inherit;
     font-size: 15px;
 }
 
+
+/* =========================
+   Count
+========================= */
+
 #count {
-    margin: 20px 5px;
-    color: #777;
+    margin-bottom: 20px;
+    color: #756d61;
     font-size: 14px;
 }
+
+
+/* =========================
+   Gallery
+========================= */
 
 #gallery {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 28px;
+    gap: 25px;
+    align-items: start;
 }
 
+
+/* =========================
+   Artwork Card
+========================= */
+
 .artwork-card {
-    background: #fff;
-    border: 1px solid #e1d9ce;
-    border-radius: 12px;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    transition: transform 0.2s ease,
-                box-shadow 0.2s ease;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #ded6c9;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .artwork-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.10);
 }
 
-.artwork-card img {
+
+/* =========================
+   Thumbnail
+========================= */
+
+.artwork-card > img {
+    display: block;
     width: 100%;
     height: 320px;
     object-fit: contain;
-    display: block;
     background: #eee9df;
 }
 
+
+/* =========================
+   Information
+========================= */
+
 .artwork-info {
     padding: 18px 18px 20px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
 }
 
 .artwork-info h3 {
-    margin: 0 0 14px;
+    margin: 0 0 15px;
+    min-height: 55px;
     font-size: 16px;
+    font-weight: 500;
     line-height: 1.9;
-    font-weight: normal;
 }
 
 .artwork-info p {
-    margin: 4px 0;
+    margin: 6px 0;
     font-size: 14px;
-    color: #666;
+    color: #655f56;
 }
 
 .artwork-info strong {
-    color: #29251f;
+    color: #39342d;
 }
 
+
+/* =========================
+   View Button
+========================= */
+
 .view-artwork {
-    margin-top: auto;
-    padding-top: 16px;
+    margin-top: 18px;
 }
 
 .view-artwork button {
     width: 100%;
-    height: 42px;
-    border: 0;
-    border-radius: 7px;
-    background: #29251f;
+    height: 44px;
+    border: none;
+    border-radius: 8px;
+    background: #332d26;
     color: white;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
 .view-artwork button:hover {
-    opacity: 0.85;
+    background: #5a4e40;
 }
 
-/* Modal */
+
+/* =========================
+   Modal
+========================= */
 
 .artwork-modal {
     position: fixed;
     inset: 0;
-    z-index: 1000;
-    background: rgba(0,0,0,0.78);
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 30px;
+    background: rgba(0, 0, 0, 0.78);
+    overflow-y: auto;
 }
 
 .modal-inner {
     position: relative;
     width: min(1100px, 95vw);
-    max-height: 94vh;
+    max-height: 95vh;
     overflow-y: auto;
-    background: #f8f5ee;
-    border-radius: 12px;
     padding: 25px;
+    border-radius: 12px;
+    background: #f8f5ee;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
 }
 
 .high-res-image {
@@ -179,49 +255,54 @@ main {
     width: 100%;
     max-height: 70vh;
     object-fit: contain;
-    background: #eee9df;
+    margin: 0 auto 25px;
+    background: #eae5db;
 }
 
 .modal-details {
-    margin-top: 25px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.modal-details .poem {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background: white;
+    white-space: pre-wrap;
+    font-size: 17px;
+    line-height: 2.1;
 }
 
 .modal-details p {
     margin: 8px 0;
 }
 
-.modal-details .poem {
-    font-size: 18px;
-    line-height: 2.2;
-    margin-bottom: 20px;
-}
 
-.modal-close {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 42px;
-    height: 42px;
-    border: 0;
-    border-radius: 50%;
-    background: #29251f;
-    color: white;
-    font-size: 28px;
-    cursor: pointer;
-    z-index: 10;
-}
-
-/* Tablet */
+/* =========================
+   Mobile
+========================= */
 
 @media (max-width: 1100px) {
+
     #gallery {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
-/* Mobile */
-
 @media (max-width: 750px) {
+
+    header {
+        padding: 35px 15px 25px;
+    }
+
+    header h1 {
+        font-size: 32px;
+    }
+
+    main {
+        padding: 25px 15px 50px;
+    }
 
     .filters {
         grid-template-columns: 1fr;
@@ -229,25 +310,21 @@ main {
 
     #gallery {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
+        gap: 15px;
     }
 
-    .artwork-card img {
-        height: 240px;
-    }
-
-    header h1 {
-        font-size: 34px;
+    .artwork-card > img {
+        height: 250px;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 500px) {
 
     #gallery {
         grid-template-columns: 1fr;
     }
 
-    .artwork-card img {
-        height: 330px;
+    .artwork-card > img {
+        height: 320px;
     }
 }
