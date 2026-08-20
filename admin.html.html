@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>مدیریت کلک دبیر</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Tahoma, Arial, sans-serif;
+        background: #1e2329;
+        color: #eee;
+    }
+
+    header {
+        background: #11161b;
+        padding: 20px 30px;
+        border-bottom: 1px solid #3b424a;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    header h1 {
+        margin: 0 0 8px;
+        font-size: 25px;
+    }
+
+    header p {
+        margin: 0;
+        color: #aaa;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: auto;
+        padding: 25px;
+    }
+
+    .toolbar {
+        background: #292f36;
+        border: 1px solid #414952;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+
+    .toolbar-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        background: #171b20;
+        color: #eee;
+        border: 1px solid #505963;
+        border-radius: 7px;
+        padding: 10px;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: #79b8ff;
+    }
+
+    #search {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    button {
+        border: none;
+        border-radius: 7px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background: #1769aa;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #2185d0;
+    }
+
+    .btn-green {
+        background: #238636;
+        color: white;
+    }
+
+    .btn-red {
+        background: #a52a2a;
+        color: white;
+    }
+
+    .btn-gray {
+        background: #454d56;
+        color: white;
+    }
+
+    .status {
+        margin-top: 12px;
+        color: #aaa;
+    }
+
+    .layout {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 20px;
+    }
+
+    .list {
+        background: #292f36;
+        border: 1px solid #414952;
+        border-radius: 12px;
+        overflow: hidden;
+        max-height: calc(100vh - 190px);
+        overflow-y: auto;
+    }
+
+    .item {
+        padding: 13px 15px;
+        border-bottom: 1px solid #414952;
+        cursor: pointer;
+    }
+
+    .item:hover {
+        background: #343b43;
+    }
+
+    .item.active {
+        background: #164a70;
+    }
+
+    .item-id {
+        color: #79b8ff;
+        font-size: 12px;
+        margin-bottom: 5px;
+        direction: ltr;
+        text-align: left;
+    }
+
+    .item-text {
+        font-size: 14px;
+        line-height: 1.7;
+        max-height: 50px;
+        overflow: hidden;
+    }
+
+    .editor {
+        background: #292f36;
+        border: 1px solid #414952;
+        border-radius: 12px;
+        padding: 22px;
+    }
+
+    .editor h2 {
+        margin-top: 0;
+    }
+
+    .field {
+        margin-bottom: 15px;
+    }
+
+    .field label {
+        display: block;
+        margin-bottom: 6px;
+        color: #ccc;
+        font-size: 13px;
+    }
+
+    textarea {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    textarea.large {
+        min-height: 230px;
+    }
+
+    .two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .preview {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .preview-box {
+        background: #171b20;
+        border: 1px solid #414952;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    .preview-box h3 {
+        font-size: 13px;
+        color: #aaa;
+        margin-top: 0;
+    }
+
+    .preview-box img {
+        width: 100%;
+        max-height: 350px;
+        object-fit: contain;
+        background: #111;
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #414952;
+    }
+
+    .empty {
+        padding: 30px;
+        text-align: center;
+        color: #999;
+    }
+
+    @media (max-width: 900px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+
+        .list {
+            max-height: 400px;
+        }
+
+        .two-columns,
+        .preview {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>مدیریت آثار — کلک دبیر</h1>
+    <p>ویرایش شعر، شاعر، خوشنویس، منبع و مشخصات آثار</p>
+</header>
+
+<div class="container">
+
+    <div class="toolbar">
+
+        <div class="toolbar-row">
+
+            <input
+                id="search"
+                type="text"
+                placeholder="جستجو بر اساس شعر، شاعر، خوشنویس، قالب یا شناسه..."
+            >
+
+            <button class="btn-primary" onclick="loadData()">
+                بارگذاری دوباره
+            </button>
+
+            <button class="btn-green" onclick="downloadJSON()">
+                دانلود JSON
+            </button>
+
+        </div>
+
+        <div class="status" id="status">
+            در حال بارگذاری...
+        </div>
+
+    </div>
+
+
+    <div class="layout">
+
+        <!-- LIST -->
+
+        <div class="list" id="list">
+            <div class="empty">
+                در حال بارگذاری آثار...
+            </div>
+        </div>
+
+
+        <!-- EDITOR -->
+
+        <div class="editor" id="editor">
+
+            <div class="empty">
+                یک اثر را از فهرست انتخاب کنید.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let artworks = [];
+let currentIndex = null;
+
+
+// ============================================
+// LOAD JSON
+// ============================================
+
+async function loadData() {
+
+    const status = document.getElementById("status");
+
+    status.textContent = "در حال بارگذاری artworks_final.json ...";
+
+    try {
+
+        const response = await fetch(
+            "artworks_final.json?t=" + Date.now()
+        );
+
+        if (!response.ok) {
+            throw new Error("فایل artworks_final.json پیدا نشد.");
+        }
+
+        artworks = await response.json();
+
+        status.textContent =
+            "تعداد آثار: " + artworks.length;
+
+        renderList();
+
+    } catch (error) {
+
+        status.textContent =
+            "خطا در بارگذاری JSON: " + error.message;
+
+        document.getElementById("list").innerHTML = `
+            <div class="empty">
+                فایل artworks_final.json قابل بارگذاری نیست.
+                <br><br>
+                اگر فایل را مستقیماً با double-click باز کرده‌اید،
+                آن را روی GitHub Pages اجرا کنید.
+            </div>
+        `;
+    }
+}
+
+
+// ============================================
+// SEARCH
+// ============================================
+
+document.getElementById("search").addEventListener(
+    "input",
+    renderList
+);
+
+
+function searchableText(item) {
+
+    return JSON.stringify(item)
+        .toLowerCase();
+}
+
+
+// ============================================
+// LIST
+// ============================================
+
+function renderList() {
+
+    const list = document.getElementById("list");
+
+    const query =
+        document.getElementById("search")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const results = [];
+
+    artworks.forEach((item, index) => {
+
+        if (!query || searchableText(item).includes(query)) {
+
+            results.push({
+                item,
+                index
+            });
+
+        }
+
+    });
+
+
+    if (results.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty">
+                موردی پیدا نشد.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML = results.map(result => {
+
+        const item = result.item;
+        const index = result.index;
+
+        const text =
+            item.poem_text ||
+            item.text ||
+            "";
+
+        const shortText =
+            text.length > 120
+                ? text.substring(0, 120) + "..."
+                : text;
+
+        return `
+
+            <div
+                class="item ${index === currentIndex ? "active" : ""}"
+                onclick="openEditor(${index})"
+            >
+
+                <div class="item-id">
+                    ${item.id || "بدون شناسه"}
+                </div>
+
+                <div class="item-text">
+                    ${escapeHTML(shortText)}
+                </div>
+
+            </div>
+
+        `;
+
+    }).join("");
+}
+
+
+// ============================================
+// OPEN EDITOR
+// ============================================
+
+function openEditor(index) {
+
+    currentIndex = index;
+
+    const item = artworks[index];
+
+    const editor =
+        document.getElementById("editor");
+
+
+    editor.innerHTML = `
+
+        <h2>
+            ویرایش اثر
+            <span style="color:#79b8ff">
+                ${escapeHTML(item.id || "")}
+            </span>
+        </h2>
+
+
+        <div class="preview">
+
+            <div class="preview-box">
+
+                <h3>بندانگشتی</h3>
+
+                ${
+                    item.thumbnail
+                    ? `
+                    <img
+                        src="${escapeAttribute(item.thumbnail)}"
+                        onerror="this.style.display='none'"
+                    >
+                    `
+                    : `
+                    <div class="empty">
+                        تصویر ندارد
+                    </div>
+                    `
+                }
+
+            </div>
+
+
+            <div class="preview-box">
+
+                <h3>تصویر با کیفیت</h3>
+
+                ${
+                    item.high_res
+                    ? `
+                    <img
+                        src="${escapeAttribute(item.high_res)}"
+                        onerror="this.style.display='none'"
+                    >
+                    `
+                    : `
+                    <div class="empty">
+                        تصویر ندارد
+                    </div>
+                    `
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>شناسه</label>
+
+                <input
+                    id="f_id"
+                    value="${escapeAttribute(item.id || "")}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>تاریخ</label>
+
+                <input
+                    id="f_date"
+                    value="${escapeAttribute(item.date || "")}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>شعر / متن اثر</label>
+
+            <textarea
+                id="f_poem_text"
+                class="large"
+            >${escapeHTML(item.poem_text || "")}</textarea>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>توضیحات</label>
+
+            <textarea
+                id="f_description"
+            >${escapeHTML(item.description || "")}</textarea>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>شاعر</label>
+
+                <input
+                    id="f_poets"
+                    value="${escapeAttribute(
+                        (item.poets || []).join("، ")
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>خوشنویس</label>
+
+                <input
+                    id="f_calligraphers"
+                    value="${escapeAttribute(
+                        (item.calligraphers || []).join("، ")
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>خط</label>
+
+                <input
+                    id="f_scripts"
+                    value="${escapeAttribute(
+                        (item.scripts || []).join("، ")
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>قالب</label>
+
+                <input
+                    id="f_formats"
+                    value="${escapeAttribute(
+                        (item.formats || []).join("، ")
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>تکنیک</label>
+
+                <input
+                    id="f_techniques"
+                    value="${escapeAttribute(
+                        (item.techniques || []).join("، ")
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>دوره</label>
+
+                <input
+                    id="f_periods"
+                    value="${escapeAttribute(
+                        (item.periods || []).join("، ")
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>مکان</label>
+
+                <input
+                    id="f_places"
+                    value="${escapeAttribute(
+                        (item.places || []).join("، ")
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>سایر برچسب‌ها</label>
+
+                <input
+                    id="f_other_tags"
+                    value="${escapeAttribute(
+                        (item.other_tags || []).join("، ")
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>منبع شعر / متن</label>
+
+            <input
+                id="f_source"
+                value="${escapeAttribute(item.source || "")}"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>منبع تصویر</label>
+
+            <input
+                id="f_image_source"
+                value="${escapeAttribute(
+                    item.image_source || ""
+                )}"
+                placeholder="مثلاً Wikimedia Commons / مجموعه خلیلی ..."
+            >
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>مسیر تصویر بندانگشتی</label>
+
+                <input
+                    id="f_thumbnail"
+                    value="${escapeAttribute(
+                        item.thumbnail || ""
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>مسیر تصویر با کیفیت</label>
+
+                <input
+                    id="f_high_res"
+                    value="${escapeAttribute(
+                        item.high_res || ""
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="btn-green"
+                onclick="saveCurrent()"
+            >
+                ذخیره تغییرات
+            </button>
+
+
+            <button
+                class="btn-gray"
+                onclick="duplicateHighRes()"
+            >
+                high-res ← thumbnail
+            </button>
+
+
+            <button
+                class="btn-red"
+                onclick="deleteCurrent()"
+            >
+                حذف اثر
+            </button>
+
+        </div>
+
+    `;
+
+
+    renderList();
+}
+
+
+// ============================================
+// SAVE
+// ============================================
+
+function saveCurrent() {
+
+    if (currentIndex === null) return;
+
+    const item = artworks[currentIndex];
+
+
+    item.id =
+        document.getElementById("f_id").value.trim();
+
+    item.date =
+        document.getElementById("f_date").value.trim() || null;
+
+    item.poem_text =
+        document.getElementById("f_poem_text").value;
+
+    item.description =
+        document.getElementById("f_description").value;
+
+
+    item.poets =
+        splitValues(
+            document.getElementById("f_poets").value
+        );
+
+    item.calligraphers =
+        splitValues(
+            document.getElementById("f_calligraphers").value
+        );
+
+    item.scripts =
+        splitValues(
+            document.getElementById("f_scripts").value
+        );
+
+    item.formats =
+        splitValues(
+            document.getElementById("f_formats").value
+        );
+
+    item.techniques =
+        splitValues(
+            document.getElementById("f_techniques").value
+        );
+
+    item.periods =
+        splitValues(
+            document.getElementById("f_periods").value
+        );
+
+    item.places =
+        splitValues(
+            document.getElementById("f_places").value
+        );
+
+    item.other_tags =
+        splitValues(
+            document.getElementById("f_other_tags").value
+        );
+
+
+    item.source =
+        document.getElementById("f_source").value.trim();
+
+
+    item.image_source =
+        document.getElementById("f_image_source").value.trim();
+
+
+    item.thumbnail =
+        document.getElementById("f_thumbnail").value.trim();
+
+
+    item.high_res =
+        document.getElementById("f_high_res").value.trim();
+
+
+    document.getElementById("status").textContent =
+        "تغییرات این اثر ذخیره شد. برای ذخیره دائمی فایل، روی «دانلود JSON» بزن.";
+
+
+    renderList();
+
+    alert("تغییرات ذخیره شد.");
+}
+
+
+// ============================================
+// DUPLICATE THUMBNAIL
+// ============================================
+
+function duplicateHighRes() {
+
+    const thumbnail =
+        document.getElementById("f_thumbnail").value;
+
+    document.getElementById("f_high_res").value =
+        thumbnail;
+}
+
+
+// ============================================
+// DELETE
+// ============================================
+
+function deleteCurrent() {
+
+    if (currentIndex === null) return;
+
+
+    const item = artworks[currentIndex];
+
+
+    if (
+        !confirm(
+            "آیا مطمئن هستید که می‌خواهید این اثر حذف شود؟"
+        )
+    ) {
+        return;
+    }
+
+
+    artworks.splice(currentIndex, 1);
+
+    currentIndex = null;
+
+    document.getElementById("editor").innerHTML = `
+        <div class="empty">
+            اثر حذف شد.
+        </div>
+    `;
+
+    renderList();
+
+
+    document.getElementById("status").textContent =
+        "اثر حذف شد. برای اعمال دائمی تغییرات، JSON جدید را دانلود کنید.";
+}
+
+
+// ============================================
+// DOWNLOAD JSON
+// ============================================
+
+function downloadJSON() {
+
+    const json =
+        JSON.stringify(
+            artworks,
+            null,
+            2
+        );
+
+
+    const blob =
+        new Blob(
+            [json],
+            {
+                type: "application/json;charset=utf-8"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        "artworks_final.json";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+
+    document.getElementById("status").textContent =
+        "artworks_final.json دانلود شد. اکنون آن را جایگزین فایل قبلی در Repository کنید.";
+}
+
+
+// ============================================
+// HELPERS
+// ============================================
+
+function splitValues(value) {
+
+    return value
+        .split(/[,،]/)
+        .map(x => x.trim())
+        .filter(Boolean);
+
+}
+
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHTML(value);
+
+}
+
+
+// ============================================
+// START
+// ============================================
+
+loadData();
+
+</script>
+
+</body>
+</html>
