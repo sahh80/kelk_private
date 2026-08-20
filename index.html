@@ -1,50 +1,117 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>کلک دبیر | گنجینه خوشنویسی فارسی</title>
+
+    <title>کلک دبیر | درگاه مشق نظری نستعلیق</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header>
-    <h1>کلک دبیر</h1>
-    <p>گنجینه‌ای از خوشنویسی و ادبیات فارسی</p>
+<header class="site-header">
+
+    <div class="header-top">
+
+        <div class="brand">
+
+            <img
+                src="images/logo.png"
+                alt="کلک دبیر"
+                class="site-logo"
+                onerror="this.style.display='none';"
+            >
+
+            <div class="brand-text">
+
+                <h1 data-fa="کلک دبیر"
+                    data-en="Kelk Dabir">
+                    کلک دبیر
+                </h1>
+
+                <p data-fa="درگاه مشق نظری نستعلیق"
+                   data-en="A gateway to theoretical practice of Nastaliq calligraphy">
+                    درگاه مشق نظری نستعلیق
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <button id="languageToggle" class="language-toggle">
+            English
+        </button>
+
+    </div>
+
+
+    <div class="site-description"
+         data-fa="«کلک دبیر» درگاهی است برای مشق نظری خوشنویسی که با قابلیت جستجو، امکان دسترسی سریع را به ترکیب انتخابی بزرگان نستعلیق و شکسته‌نستعلیق از کلمات و عبارات فراهم می‌کند."
+         data-en="Kelk Dabir is a gateway for theoretical practice of Persian calligraphy, enabling quick access through searchable selections of words and phrases written by masters of Nastaliq and Shekasteh-Nastaliq.">
+
+        «کلک دبیر» درگاهی است برای مشق نظری خوشنویسی که با قابلیت جستجو، امکان دسترسی سریع را به ترکیب انتخابی بزرگان نستعلیق و شکسته‌نستعلیق از کلمات و عبارات فراهم می‌کند.
+
+    </div>
+
 </header>
+
 
 <main>
 
     <section class="search-box">
+
         <input
             id="search"
             type="text"
-            placeholder="جستجو در شعر، شاعر، خوشنویس و هشتگ..."
+            placeholder="جستجو در شعر، شاعر، خوشنویس، خط و قالب..."
         >
 
+
         <div class="filters">
+
             <select id="poetFilter">
                 <option value="">همه شاعران</option>
             </select>
+
 
             <select id="artistFilter">
                 <option value="">همه خوشنویسان</option>
             </select>
 
+
             <select id="formatFilter">
                 <option value="">همه قالب‌ها</option>
             </select>
+
         </div>
+
     </section>
 
+
     <div id="count"></div>
+
 
     <section id="gallery"></section>
 
 </main>
 
+
+<footer>
+
+    <span data-fa="گرداننده: @sahhosseini"
+          data-en="Curated by: @sahhosseini">
+        گرداننده: @sahhosseini
+    </span>
+
+</footer>
+
+
 <script src="app.js"></script>
 
 </body>
+
 </html>
