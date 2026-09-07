@@ -2,9 +2,9 @@
   {
     "id": "message550",
     "date": "09.02.2024 17:02:12 UTC+03:30",
-    "poem_text": "راه عشق ار چه کمینگاه نظربازانست (نظربازان است)، تتمه فردا [هر که دانسته رَوَد صَرفه ز اَعدا ببرد]",
+    "poem_text": "راه عشق ار چه کمینگاه نظربازانست (نظربازان است)\n[هر که دانسته رَوَد صَرفه ز اَعدا ببرد]\nتتمه فرداً\nTEST-123",
     "description": "",
-    "source": "کانال خوشنویسی قدما",
+    "source": "https://ganjoor.net/hafez/ghazal/sh128",
     "poets": [
       "حافظ"
     ],
@@ -22,7 +22,8 @@
     "places": [],
     "other_tags": [],
     "thumbnail": "photos/photo_240@09-02-2024_17-02-12.jpg",
-    "high_res": "files/IMG_20240209_171546.jpg"
+    "high_res": "files/IMG_20240209_171546.jpg",
+    "image_source": "https://t.me/khoshnevisi_Qodama"
   },
   {
     "id": "message553",
