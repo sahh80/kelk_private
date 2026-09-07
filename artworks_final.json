@@ -27,7 +27,7 @@
   {
     "id": "message553",
     "date": "10.02.2024 01:21:28 UTC+03:30",
-    "poem_text": "هو الروف و الرحیم هنر بچشم (به چشم) عداوت بزرگتر عیبیست (عیبی است) گلست (گل است) سعدی و در چشم دشمنان خار [است] العبد المذنب الفقیر الحقیر، غلامرضا، غفر ذنوبه و ستر عیوبه",
+    "poem_text": "هو الروف و الرحیم\nهنر بچشم (به چشم) عداوت بزرگتر عیبیست (عیبی است)\nگلست (گل است) سعدی و در چشم دشمنان خار [است]\nالعبد المذنب الفقیر الحقیر، غلامرضا، غفر ذنوبه و ستر عیوبه",
     "description": "",
     "source": "ویکی مدیا",
     "poets": [
@@ -47,7 +47,8 @@
     "places": [],
     "other_tags": [],
     "thumbnail": "photos/photo_241@10-02-2024_01-21-28.jpg",
-    "high_res": "files/Nasta'liq_calligraphy_style_Mirza_Gholamreza_Esfahani_01.png"
+    "high_res": "files/Nasta'liq_calligraphy_style_Mirza_Gholamreza_Esfahani_01.png",
+    "image_source": ""
   },
   {
     "id": "message555",
