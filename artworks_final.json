@@ -83,7 +83,7 @@
   {
     "id": "message557",
     "date": "10.02.2024 10:45:40 UTC+03:30",
-    "poem_text": "باسمه سبحانه الهی همه از تو پرسند و عبدالله از خود یا علی مدد است الحقیر الفقیر غلامرضا غفر ذنوبه [سال] ۱۲۹۵",
+    "poem_text": "باسمه سبحانه\nالهی همه از تو پرسند و عبدالله از خود\n\nیا علی مدد است \nالحقیر الفقیر غلامرضا غفر ذنوبه \n\n[سال] ۱۲۹۵",
     "description": "",
     "source": "https://www.meisterdrucke.ie/fine-art-prints/Mirza-Gholam-Reza-Esfahani/228191/%27Black-art%27-calligraphy%2C-1878.html",
     "poets": [],
@@ -103,7 +103,11 @@
       "خواجه"
     ],
     "thumbnail": "photos/photo_243@10-02-2024_10-45-40.jpg",
-    "high_res": "files/Mirza_Gholam_Reza_Esfahani_Siyah_mashq_calligraphy_1878_MeisterDrucke.jpg"
+    "high_res": "files/Mirza_Gholam_Reza_Esfahani_Siyah_mashq_calligraphy_1878_MeisterDrucke.jpg",
+    "year": "",
+    "poem_source": "",
+    "image_source": "",
+    "additional_source": ""
   },
   {
     "id": "message559",
