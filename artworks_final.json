@@ -2,7 +2,7 @@
   {
     "id": "message550",
     "date": "09.02.2024 17:02:12 UTC+03:30",
-    "poem_text": "راه عشق ار چه کمینگاه نظربازانست (نظربازان است)\n[هر که دانسته رَوَد صَرفه ز اَعدا ببرد]\nتتمه فرداً\nTEST-123",
+    "poem_text": "راه عشق ار چه کمینگاه نظربازانست (نظربازان است)\n[هر که دانسته رَوَد صَرفه ز اَعدا ببرد]\nتتمه فرداً",
     "description": "",
     "source": "https://ganjoor.net/hafez/ghazal/sh128",
     "poets": [
@@ -23,7 +23,10 @@
     "other_tags": [],
     "thumbnail": "photos/photo_240@09-02-2024_17-02-12.jpg",
     "high_res": "files/IMG_20240209_171546.jpg",
-    "image_source": "https://t.me/khoshnevisi_Qodama"
+    "image_source": "https://t.me/khoshnevisi_Qodama",
+    "year": "",
+    "poem_source": "",
+    "additional_source": ""
   },
   {
     "id": "message553",
