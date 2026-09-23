@@ -3,44 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="کلک دبیر — درگاه مشق نظری نستعلیق و آرشیو پژوهشی خوشنویسی فارسی">
-<title>کلک دبیر | درگاه مشق نظری نستعلیق</title>
+<meta name="description" content="کلک دبیر — نگارخانه و آرشیو پژوهشی خوشنویسی فارسی">
+<title>کلک دبیر</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="site-header">
   <div class="header-top">
-    <div class="brand">
-      <img src="images/logo.png" alt="کلک دبیر" class="site-logo" onerror="this.style.display='none'">
-      <div class="brand-text">
-        <h1 id="siteTitle">کلک دبیر</h1>
-        <p id="siteSubtitle">درگاه مشق نظری نستعلیق</p>
-      </div>
-    </div>
+    <a class="brand" href="#gallery" aria-label="کلک دبیر">
+      <img src="logo-transparent.svg" alt="کلک دبیر" class="site-logo">
+    </a>
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <a href="#gallery" data-nav="gallery" class="active">نگارخانه</a>
+      <a href="#library" data-nav="library">کتابخانه</a>
+      <a href="#events" data-nav="events">رویدادها</a>
+      <a href="#about" data-nav="about">درباره ما</a>
+    </nav>
     <button id="languageToggle" class="language-toggle" type="button">English</button>
   </div>
-  <div id="siteDescription" class="site-description">«کلک دبیر» درگاهی است برای مشق نظری خوشنویسی که با قابلیت جستجو، امکان دسترسی سریع را به ترکیب انتخابی بزرگان نستعلیق و شکسته‌نستعلیق از کلمات و عبارات فراهم می‌کند.</div>
 </header>
+
 <main>
+<section id="gallery" class="page-section active-section">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow" id="galleryEyebrow">نگارخانه</span>
+      <h1 id="galleryTitle">آثار خوشنویسی</h1>
+    </div>
+    <div id="count" class="count"></div>
+  </div>
   <section class="search-box">
-    <input id="search" type="search" autocomplete="off" placeholder="جستجو در شعر، شاعر، خوشنویس، خط، قالب، دوره، مکان و منابع…">
+    <input id="search" type="search" autocomplete="off" placeholder="جستجو در شعر، خوشنویس، شاعر، خط، قالب، تکنیک، دوره، مکان و منابع…">
     <div class="filters">
-      <select id="poetFilter"><option value="">همه شاعران</option></select>
       <select id="artistFilter"><option value="">همه خوشنویسان</option></select>
+      <select id="poetFilter"><option value="">همه شاعران</option></select>
       <select id="scriptFilter"><option value="">همه خطوط</option></select>
       <select id="formatFilter"><option value="">همه قالب‌ها</option></select>
+      <select id="techniqueFilter"><option value="">همه تکنیک‌ها</option></select>
       <select id="periodFilter"><option value="">همه دوره‌ها</option></select>
     </div>
     <div class="search-hint" id="searchHint">می‌توانید چند کلیدواژه را هم‌زمان جستجو کنید.</div>
   </section>
-  <div id="count" class="count"></div>
-  <section id="gallery" class="gallery"></section>
+  <section id="galleryGrid" class="gallery"></section>
+</section>
+
+<section id="library" class="page-section">
+  <div class="section-heading"><div><span class="eyebrow" id="libraryEyebrow">کتابخانه</span><h1 id="libraryTitle">منابع و مراجع</h1></div></div>
+  <p class="section-intro" id="libraryIntro">منابع شعر، کتاب‌ها، مرقعات و مراجع پژوهشی ثبت‌شده در آرشیو.</p>
+  <div id="libraryGrid" class="resource-grid"></div>
+</section>
+
+<section id="events" class="page-section">
+  <div class="section-heading"><div><span class="eyebrow" id="eventsEyebrow">رویدادها</span><h1 id="eventsTitle">رویدادها</h1></div></div>
+  <div class="event-card">
+    <div class="event-date" id="eventDate">به‌زودی</div>
+    <div><h2 id="eventCardTitle">رویدادهای کلک دبیر</h2><p id="eventCardText">در این بخش، نمایشگاه‌ها، نشست‌ها، کارگاه‌ها و رویدادهای مرتبط با خوشنویسی و پژوهش‌های آرشیوی معرفی خواهند شد.</p></div>
+  </div>
+</section>
+
+<section id="about" class="page-section">
+  <div class="section-heading"><div><span class="eyebrow" id="aboutEyebrow">درباره ما</span><h1 id="aboutTitle">کلک دبیر</h1></div></div>
+  <div class="about-card">
+    <p id="aboutText">«کلک دبیر» درگاهی است برای مشق نظری خوشنویسی که با قابلیت جستجو، امکان دسترسی سریع را به ترکیب انتخابی بزرگان نستعلیق و شکسته‌نستعلیق از کلمات و عبارات فراهم می‌کند.</p>
+    <p id="aboutTags">#PersianCalligraphy &nbsp; #Calligraphy &nbsp; #Nastaliq</p>
+    <p id="aboutCurator">گرداننده: @sahhosseini</p>
+  </div>
+</section>
 </main>
-<footer>
-  <span id="footerText">گرداننده: @sahhosseini</span>
-  <span class="footer-sep">·</span>
-  <span id="datasetInfo">آرشیو استخراج‌شده از نسخه پشتیبان تلگرام</span>
-</footer>
+
+<footer><span id="footerText">گرداننده: @sahhosseini</span></footer>
 <script src="app.js"></script>
 </body>
 </html>
