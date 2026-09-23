@@ -1,0 +1,11 @@
+{
+  "title": "کلک دبیر",
+  "subtitle": "درگاه مشق نظری نستعلیق",
+  "generated": "2026-09-23",
+  "source_files": [
+    "messages.html",
+    "messages2.html"
+  ],
+  "artworks_count": 578,
+  "notes": "Hashtags are normalized into structured metadata; raw hashtags are retained in the hashtags field for provenance. Main Telegram photos are the primary web images. Separate media replies are preserved in attached_media when present."
+}

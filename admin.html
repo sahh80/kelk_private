@@ -1,109 +1,1338 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>مدیریت کلک دبیر</title>
+
 <style>
-:root{--bg:#171b20;--panel:#232930;--border:#46515d;--text:#f2f4f6;--muted:#aeb7c2;--green:#20c997;--red:#ef5350;--blue:#5b9cff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
-.wrap{max-width:1500px;margin:auto;padding:20px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:18px}
-h1,h2{margin:0 0 14px}.muted,.small{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-label{display:block;color:var(--muted);font-size:14px;margin:0 0 7px}input,textarea{width:100%;background:#15191e;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:11px;font:inherit}
-textarea{min-height:120px;resize:vertical}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}button{border:0;border-radius:8px;padding:10px 15px;font:inherit;cursor:pointer;background:#39434f;color:#fff}
-button.primary{background:var(--green);color:#07120e}button.danger{background:var(--red)}button.blue{background:var(--blue);color:#07101c}button:disabled{opacity:.45}
-.status{display:none;margin-top:12px;padding:10px;border-radius:8px;background:#17251f;color:#9df0c7}.status.error{background:#2b1919;color:#ffb1ae}.status.warn{background:#2a2417;color:#ffd88a}
-.list{display:grid;grid-template-columns:360px 1fr;gap:18px}.items{max-height:760px;overflow:auto;border:1px solid var(--border);border-radius:10px}
-.item{padding:12px;border-bottom:1px solid #343d46;cursor:pointer}.item:hover,.item.active{background:#303943}.item .id{font-size:12px;color:var(--muted);direction:ltr;text-align:left}.item .poem{font-size:14px;line-height:1.7;margin-top:5px}.item .meta{font-size:12px;color:#9ea8b3}
-.preview{display:grid;grid-template-columns:1fr 1fr;gap:14px}.preview img{width:100%;height:300px;object-fit:contain;background:#11151a;border:1px solid var(--border);border-radius:8px}
-.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px}.toolbar input{max-width:450px}
-code{direction:ltr;display:inline-block;background:#11151a;padding:2px 5px;border-radius:4px}
-@media(max-width:900px){.grid,.grid3,.list,.preview{grid-template-columns:1fr}}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #1e2329;
+    color: #eee;
+    font-family: Tahoma, Arial, sans-serif;
+    line-height: 1.8;
+}
+
+header {
+    background: #11161b;
+    padding: 20px 30px;
+    border-bottom: 1px solid #3b424a;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: 25px;
+}
+
+header p {
+    margin: 0;
+    color: #aaa;
+}
+
+.container {
+    max-width: 1450px;
+    margin: auto;
+    padding: 25px;
+}
+
+.toolbar {
+    background: #292f36;
+    border: 1px solid #414952;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+.toolbar-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    background: #171b20;
+    color: #eee;
+    border: 1px solid #505963;
+    border-radius: 7px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #79b8ff;
+}
+
+#search {
+    flex: 1;
+    min-width: 300px;
+}
+
+button {
+    border: none;
+    border-radius: 7px;
+    padding: 10px 16px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #2869a6;
+    color: white;
+}
+
+.btn-green {
+    background: #26734d;
+    color: white;
+}
+
+.btn-red {
+    background: #8f3030;
+    color: white;
+}
+
+.btn-secondary {
+    background: #505963;
+    color: white;
+}
+
+button:hover {
+    filter: brightness(1.12);
+}
+
+.status {
+    margin-top: 12px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.list {
+    background: #292f36;
+    border: 1px solid #414952;
+    border-radius: 12px;
+    overflow-y: auto;
+    max-height: calc(100vh - 180px);
+    position: sticky;
+    top: 150px;
+}
+
+.item {
+    padding: 13px 15px;
+    border-bottom: 1px solid #3b424a;
+    cursor: pointer;
+}
+
+.item:hover {
+    background: #343b43;
+}
+
+.item.active {
+    background: #164a75;
+}
+
+.item-id {
+    color: #79b8ff;
+    font-size: 12px;
+    direction: ltr;
+    text-align: left;
+}
+
+.item-text {
+    color: #ddd;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.editor {
+    background: #292f36;
+    border: 1px solid #414952;
+    border-radius: 12px;
+    padding: 22px;
+}
+
+.editor h2 {
+    margin-top: 0;
+}
+
+.field {
+    margin-bottom: 15px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #ccc;
+    font-size: 13px;
+}
+
+textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+textarea.large {
+    min-height: 230px;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.preview-box {
+    background: #171b20;
+    border: 1px solid #414952;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.preview-box h3 {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 0;
+}
+
+.preview-box img {
+    width: 100%;
+    max-height: 350px;
+    object-fit: contain;
+    background: #111;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #414952;
+}
+
+.empty {
+    padding: 30px;
+    text-align: center;
+    color: #999;
+}
+
+.notice {
+    background: #242a31;
+    border: 1px solid #46505b;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    color: #bbb;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .list {
+        max-height: 400px;
+        position: static;
+    }
+
+    .two-columns,
+    .preview {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
+
 <body>
-<div class="wrap">
-<div class="panel">
-<h1>مدیریت کلک دبیر</h1>
-<div class="muted">نسخه‌ای که تغییرات را مستقیماً در GitHub ذخیره می‌کند.</div>
+
+<header>
+    <h1>مدیریت آثار — کلک دبیر</h1>
+    <p>ویرایش شعر، شاعر، خوشنویس، منابع و مشخصات آثار</p>
+</header>
+
+
+<div class="container">
+
+    <div class="toolbar">
+
+        <div class="toolbar-row">
+
+            <input
+                id="search"
+                type="text"
+                placeholder="جستجو بر اساس شعر، شاعر، خوشنویس، منبع، قالب یا شناسه..."
+            >
+
+            <button
+                class="btn-primary"
+                onclick="loadData()"
+            >
+                بارگذاری دوباره
+            </button>
+
+            <button
+                class="btn-green"
+                onclick="downloadJSON()"
+            >
+                دانلود JSON
+            </button>
+
+        </div>
+
+        <div
+            class="status"
+            id="status"
+        >
+            در حال بارگذاری...
+        </div>
+
+    </div>
+
+
+    <div class="notice">
+        تغییرات ابتدا در همین صفحه نگه داشته می‌شوند.
+        برای ذخیره دائمی، روی «ذخیره اثر» و در پایان روی «دانلود JSON» بزنید.
+        سپس فایل دانلودشده را با نام <b>artworks_final.json</b> در Repository جایگزین کنید.
+    </div>
+
+
+    <div class="layout">
+
+        <div
+            class="list"
+            id="list"
+        >
+            <div class="empty">
+                در حال بارگذاری آثار...
+            </div>
+        </div>
+
+
+        <div
+            class="editor"
+            id="editor"
+        >
+            <div class="empty">
+                یک اثر را از فهرست انتخاب کنید.
+            </div>
+        </div>
+
+    </div>
+
 </div>
 
-<div class="panel">
-<h2>اتصال به GitHub</h2>
-<div class="grid">
-<div><label>GitHub Fine-grained Token</label><input id="token" type="password" autocomplete="off" placeholder="توکن را اینجا وارد کن"></div>
-<div><label>مخزن</label><input value="sahh80/kelk_private" readonly></div>
-</div>
-<div class="muted" style="line-height:1.9;margin-top:8px">
-توکن داخل فایل ذخیره نمی‌شود و فقط در sessionStorage همین نشست مرورگر نگهداری می‌شود.
-برای توکن فقط دسترسی <b>Contents: Read and write</b> به repository <code>sahh80/kelk_private</code> بده.
-</div>
-<div class="row" style="margin-top:12px"><button id="connect" class="blue">اتصال و بارگذاری</button><button id="clearToken">پاک کردن توکن</button></div>
-<div id="status" class="status"></div>
-</div>
-
-<div class="panel">
-<div class="toolbar"><input id="search" placeholder="جستجو در آثار..."><span id="count" class="small"></span><button id="reload">بارگذاری مجدد</button><button id="download">دانلود JSON</button><button id="new" class="blue">اثر جدید</button></div>
-<div class="list">
-<div class="items" id="items"></div>
-<div>
-<div class="panel" style="margin:0">
-<h2>ویرایش اثر</h2>
-<div class="grid3">
-<div><label>شناسه</label><input id="id"></div><div><label>تاریخ پست</label><input id="date"></div><div><label>سال</label><input id="year"></div>
-</div>
-<div style="margin-top:14px"><label>شعر / متن</label><textarea id="poem_text"></textarea></div>
-<div style="margin-top:14px"><label>توضیحات</label><textarea id="description"></textarea></div>
-<div class="grid">
-<div><label>شاعر</label><input id="poets"></div><div><label>خوشنویس</label><input id="calligraphers"></div>
-<div><label>خط</label><input id="scripts"></div><div><label>قالب</label><input id="formats"></div>
-<div><label>تکنیک</label><input id="techniques"></div><div><label>دوره</label><input id="periods"></div>
-<div><label>مکان</label><input id="places"></div><div><label>سایر برچسب‌ها</label><input id="other_tags"></div>
-</div>
-<div style="margin-top:14px"><label>منبع شعر</label><input id="poem_source"></div>
-<div style="margin-top:14px"><label>منبع تصویر</label><input id="image_source"></div>
-<div style="margin-top:14px"><label>منبع اضافه</label><input id="additional_source"></div>
-<div style="margin-top:14px"><label>منبع قدیمی</label><input id="source"></div>
-<div class="grid" style="margin-top:14px"><div><label>مسیر تصویر بندانگشتی</label><input id="thumbnail"></div><div><label>مسیر تصویر با کیفیت</label><input id="high_res"></div></div>
-<div class="preview" style="margin-top:14px"><div><label>بندانگشتی</label><img id="thumbPreview"></div><div><label>تصویر اصلی</label><img id="highPreview"></div></div>
-<div class="row" style="margin-top:16px"><button id="save" class="primary">ذخیره مستقیم در سایت</button><button id="dup">high-res ← thumbnail</button><button id="delete" class="danger">حذف اثر</button></div>
-<div class="small" style="margin-top:8px">پس از ذخیره، GitHub Pages خودش deployment را انجام می‌دهد.</div>
-</div>
-</div>
-</div>
-</div>
-</div>
 
 <script>
-const OWNER="sahh80",REPO="kelk_private",BRANCH="main",FILE="artworks_final.json";
-const API=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`;
-let artworks=[],current=-1,sha=null;
-const $=id=>document.getElementById(id);
-function status(m,t="ok"){let e=$("status");e.textContent=m;e.className="status"+(t==="error"?" error":t==="warn"?" warn":"");e.style.display="block"}
-function token(){return sessionStorage.getItem("kelk_github_token")||""}
-function hdr(){if(!token())throw Error("ابتدا توکن GitHub را وارد کن.");return{"Accept":"application/vnd.github+json","Authorization":"Bearer "+token(),"X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"}}
-function dec(b){const x=atob(b.replace(/\n/g,""));return new TextDecoder().decode(Uint8Array.from(x,c=>c.charCodeAt(0)))}
-function enc(s){const b=new TextEncoder().encode(s);let x="";for(let i=0;i<b.length;i+=32768)x+=String.fromCharCode(...b.subarray(i,i+32768));return btoa(x)}
-async function getFile(){let r=await fetch(API+"?ref="+BRANCH,{headers:hdr()});if(!r.ok)throw Error("GitHub GET "+r.status+" — "+(await r.text()).slice(0,300));return r.json()}
-async function load(){try{status("در حال بارگذاری از GitHub...");let d=await getFile();sha=d.sha;artworks=JSON.parse(dec(d.content));if(!Array.isArray(artworks))throw Error("ساختار JSON آرایه نیست.");renderList();if(artworks.length){if(current<0||current>=artworks.length)current=0;edit()}status("داده‌ها از GitHub بارگذاری شد: "+artworks.length+" اثر.")}catch(e){status(e.message,"error")}}
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function list(v){return Array.isArray(v)?v:(v?String(v).split(",").map(x=>x.trim()).filter(Boolean):[])}
-function set(id,v){$(id).value=Array.isArray(v)?v.join(", "):(v??"")}
-function renderList(){let q=$("search").value.toLowerCase(),box=$("items");box.innerHTML="";let n=0;artworks.forEach((a,i)=>{if(q&&!JSON.stringify(a).toLowerCase().includes(q))return;n++;let d=document.createElement("div");d.className="item"+(i===current?" active":"");d.innerHTML='<div class="id">'+esc(a.id||"بدون شناسه")+'</div><div class="poem">'+esc((a.poem_text||a.text||"").replace(/\s+/g," ").slice(0,140))+'</div><div class="meta">'+esc(list(a.poets).join("، "))+(list(a.calligraphers).length?" — "+esc(list(a.calligraphers).join("، ")):"")+'</div>';d.onclick=()=>{current=i;renderList();edit()};box.appendChild(d)});$("count").textContent=n+" از "+artworks.length+" اثر"}
-function edit(){if(current<0)return;let a=artworks[current];$("id").value=a.id??"";$("date").value=a.date??"";$("year").value=a.year??"";$("poem_text").value=a.poem_text??a.text??"";$("description").value=a.description??"";["poets","calligraphers","scripts","formats","techniques","periods","places","other_tags"].forEach(k=>set(k,a[k]));["poem_source","image_source","additional_source","source","thumbnail","high_res"].forEach(k=>$(k).value=a[k]??"");preview()}
-function collect(){return{id:$("id").value.trim(),date:$("date").value.trim(),year:$("year").value.trim(),poem_text:$("poem_text").value,description:$("description").value,poets:list($("poets").value),calligraphers:list($("calligraphers").value),scripts:list($("scripts").value),formats:list($("formats").value),techniques:list($("techniques").value),periods:list($("periods").value),places:list($("places").value),other_tags:list($("other_tags").value),poem_source:$("poem_source").value.trim(),image_source:$("image_source").value.trim(),additional_source:$("additional_source").value.trim(),source:$("source").value.trim(),thumbnail:$("thumbnail").value.trim(),high_res:$("high_res").value.trim()}}
-function sync(){if(current>=0)artworks[current]={...artworks[current],...collect()}}
-function preview(){$("thumbPreview").src=$("thumbnail").value.trim();$("highPreview").src=$("high_res").value.trim()}
-async function save(){if(current<0)return status("اثری انتخاب نشده.","error");try{sync();if(!artworks[current].id)return status("شناسه نمی‌تواند خالی باشد.","error");$("save").disabled=true;status("در حال ذخیره مستقیم در GitHub...");let remote=await getFile();sha=remote.sha;let body={message:"Update artwork "+artworks[current].id,content:enc(JSON.stringify(artworks,null,2)+"\n"),sha,branch:BRANCH};let r=await fetch(API,{method:"PUT",headers:hdr(),body:JSON.stringify(body)});if(!r.ok)throw Error("GitHub PUT "+r.status+" — "+(await r.text()).slice(0,500));let d=await r.json();sha=d.content?.sha||sha;status("تغییرات مستقیم در GitHub ذخیره شد؛ GitHub Pages اکنون در حال deploy است.");renderList()}catch(e){status(e.message,"error")}finally{$("save").disabled=false}}
-function newOne(){artworks.unshift({id:"new-"+Date.now(),date:"",year:"",poem_text:"",description:"",poets:[],calligraphers:[],scripts:[],formats:[],techniques:[],periods:[],places:[],other_tags:[],poem_source:"",image_source:"",additional_source:"",source:"",thumbnail:"",high_res:""});current=0;renderList();edit()}
-$("connect").onclick=()=>{let t=$("token").value.trim();if(!t)return status("توکن وارد نشده.","error");sessionStorage.setItem("kelk_github_token",t);$("token").value="";load()}
-$("clearToken").onclick=()=>{sessionStorage.removeItem("kelk_github_token");status("توکن از این نشست پاک شد.")}
-$("reload").onclick=load;$("search").oninput=renderList;$("save").onclick=save;$("new").onclick=newOne;
-$("download").onclick=()=>{sync();let b=new Blob([JSON.stringify(artworks,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="artworks_final.json";a.click();URL.revokeObjectURL(a.href)}
-$("dup").onclick=()=>{$("high_res").value=$("thumbnail").value.trim();preview()}
-$("delete").onclick=()=>{if(current<0)return;if(!confirm("این اثر حذف شود؟"))return;artworks.splice(current,1);current=Math.min(current,artworks.length-1);renderList();if(current>=0)edit();status("اثر حذف شد؛ برای اعمال روی سایت «ذخیره مستقیم در سایت» را بزن.","warn")}
-["thumbnail","high_res"].forEach(k=>$(k).oninput=preview);
-if(token())load();else status("برای شروع، یک Fine-grained token با دسترسی Contents: Read and write وارد کن.","warn");
+
+let artworks = [];
+let currentIndex = null;
+
+
+/* =========================================================
+   LOAD
+========================================================= */
+
+async function loadData() {
+
+    const status =
+        document.getElementById("status");
+
+    status.textContent =
+        "در حال بارگذاری artworks_final.json ...";
+
+    try {
+
+        const response =
+            await fetch(
+                "artworks_final.json?t=" + Date.now()
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "فایل artworks_final.json پیدا نشد."
+            );
+        }
+
+        const data =
+            await response.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error(
+                "ساختار فایل JSON باید یک آرایه باشد."
+            );
+        }
+
+        artworks = data.map(item => {
+
+            /*
+             * Backward compatibility:
+             * old "source" becomes poem_source
+             * if poem_source does not already exist.
+             */
+            return {
+                ...item,
+
+                year:
+                    item.year || "",
+
+                poem_source:
+                    item.poem_source ||
+                    item.source ||
+                    "",
+
+                image_source:
+                    item.image_source || "",
+
+                additional_source:
+                    item.additional_source || ""
+            };
+        });
+
+        currentIndex = null;
+
+        renderList();
+
+        document.getElementById("editor").innerHTML = `
+            <div class="empty">
+                یک اثر را از فهرست انتخاب کنید.
+            </div>
+        `;
+
+        status.textContent =
+            `${artworks.length.toLocaleString("fa-IR")} اثر بارگذاری شد.`;
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "خطا: " + error.message;
+
+        document.getElementById("list").innerHTML = `
+            <div class="empty">
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+    }
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+document
+    .getElementById("search")
+    .addEventListener(
+        "input",
+        renderList
+    );
+
+
+function searchableText(item) {
+
+    return normalize([
+        item.id || "",
+        item.poem_text || "",
+        item.text || "",
+        item.description || "",
+        item.year || "",
+        item.poem_source || "",
+        item.image_source || "",
+        item.additional_source || "",
+
+        ...(item.poets || []),
+        ...(item.calligraphers || []),
+        ...(item.scripts || []),
+        ...(item.formats || []),
+        ...(item.techniques || []),
+        ...(item.periods || []),
+        ...(item.places || []),
+        ...(item.other_tags || [])
+    ].join(" "));
+}
+
+
+function normalize(text) {
+
+    return String(text)
+        .toLowerCase()
+        .replace(/ي/g, "ی")
+        .replace(/ى/g, "ی")
+        .replace(/ك/g, "ک")
+        .replace(/\u200c/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+
+/* =========================================================
+   LIST
+========================================================= */
+
+function renderList() {
+
+    const list =
+        document.getElementById("list");
+
+    const query =
+        normalize(
+            document
+                .getElementById("search")
+                .value
+        );
+
+    const results = [];
+
+    artworks.forEach((item, index) => {
+
+        if (
+            !query ||
+            searchableText(item)
+                .includes(query)
+        ) {
+            results.push({
+                item,
+                index
+            });
+        }
+
+    });
+
+
+    if (results.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty">
+                موردی پیدا نشد.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        results
+            .map(result => {
+
+                const item =
+                    result.item;
+
+                const index =
+                    result.index;
+
+                const text =
+                    item.poem_text ||
+                    item.text ||
+                    "";
+
+                const shortText =
+                    text.length > 120
+                        ? text.substring(0, 120) + "..."
+                        : text;
+
+                return `
+                    <div
+                        class="item ${index === currentIndex ? "active" : ""}"
+                        onclick="openEditor(${index})"
+                    >
+
+                        <div class="item-id">
+                            ${escapeHTML(
+                                item.id ||
+                                "بدون شناسه"
+                            )}
+                        </div>
+
+                        <div class="item-text">
+                            ${escapeHTML(shortText)}
+                        </div>
+
+                    </div>
+                `;
+
+            })
+            .join("");
+}
+
+
+/* =========================================================
+   EDITOR
+========================================================= */
+
+function openEditor(index) {
+
+    currentIndex = index;
+
+    const item =
+        artworks[index];
+
+    const editor =
+        document.getElementById("editor");
+
+
+    editor.innerHTML = `
+
+        <h2>
+            ویرایش اثر
+            <span style="color:#79b8ff">
+                ${escapeHTML(item.id || "")}
+            </span>
+        </h2>
+
+
+        <div class="preview">
+
+            <div class="preview-box">
+
+                <h3>بندانگشتی</h3>
+
+                ${
+                    item.thumbnail
+                    ? `
+                        <img
+                            src="${escapeAttribute(item.thumbnail)}"
+                            onerror="this.style.display='none'"
+                        >
+                    `
+                    : `
+                        <div class="empty">
+                            تصویر ندارد
+                        </div>
+                    `
+                }
+
+            </div>
+
+
+            <div class="preview-box">
+
+                <h3>تصویر با کیفیت</h3>
+
+                ${
+                    item.high_res
+                    ? `
+                        <img
+                            src="${escapeAttribute(item.high_res)}"
+                            onerror="this.style.display='none'"
+                        >
+                    `
+                    : `
+                        <div class="empty">
+                            تصویر ندارد
+                        </div>
+                    `
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>شناسه</label>
+
+                <input
+                    id="f_id"
+                    value="${escapeAttribute(
+                        item.id || ""
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>تاریخ</label>
+
+                <input
+                    id="f_date"
+                    value="${escapeAttribute(
+                        item.date || ""
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>سال</label>
+
+            <input
+                id="f_year"
+                value="${escapeAttribute(
+                    item.year || ""
+                )}"
+                placeholder="مثلاً ۱۲۹۵"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>شعر / متن اثر</label>
+
+            <textarea
+                id="f_poem_text"
+                class="large"
+            >${escapeHTML(
+                item.poem_text ||
+                item.text ||
+                ""
+            )}</textarea>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>توضیحات</label>
+
+            <textarea
+                id="f_description"
+            >${escapeHTML(
+                item.description ||
+                ""
+            )}</textarea>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>شاعر</label>
+
+                <input
+                    id="f_poets"
+                    value="${escapeAttribute(
+                        (item.poets || [])
+                            .join("، ")
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>خوشنویس</label>
+
+                <input
+                    id="f_calligraphers"
+                    value="${escapeAttribute(
+                        (item.calligraphers || [])
+                            .join("، ")
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>خط</label>
+
+                <input
+                    id="f_scripts"
+                    value="${escapeAttribute(
+                        (item.scripts || [])
+                            .join("، ")
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>قالب</label>
+
+                <input
+                    id="f_formats"
+                    value="${escapeAttribute(
+                        (item.formats || [])
+                            .join("، ")
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>تکنیک</label>
+
+                <input
+                    id="f_techniques"
+                    value="${escapeAttribute(
+                        (item.techniques || [])
+                            .join("، ")
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>دوره</label>
+
+                <input
+                    id="f_periods"
+                    value="${escapeAttribute(
+                        (item.periods || [])
+                            .join("، ")
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>مکان</label>
+
+                <input
+                    id="f_places"
+                    value="${escapeAttribute(
+                        (item.places || [])
+                            .join("، ")
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>سایر برچسب‌ها</label>
+
+                <input
+                    id="f_other_tags"
+                    value="${escapeAttribute(
+                        (item.other_tags || [])
+                            .join("، ")
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>منبع شعر</label>
+
+            <input
+                id="f_poem_source"
+                value="${escapeAttribute(
+                    item.poem_source ||
+                    item.source ||
+                    ""
+                )}"
+                placeholder="مثلاً حافظ، غزلیات، گنجور"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>منبع عکس</label>
+
+            <input
+                id="f_image_source"
+                value="${escapeAttribute(
+                    item.image_source ||
+                    ""
+                )}"
+                placeholder="مثلاً Wikimedia Commons / مجموعه خلیلی"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>منبع اضافه</label>
+
+            <input
+                id="f_additional_source"
+                value="${escapeAttribute(
+                    item.additional_source ||
+                    ""
+                )}"
+                placeholder="منبع یا توضیح تکمیلی"
+            >
+
+        </div>
+
+
+        <div class="two-columns">
+
+            <div class="field">
+
+                <label>مسیر تصویر بندانگشتی</label>
+
+                <input
+                    id="f_thumbnail"
+                    value="${escapeAttribute(
+                        item.thumbnail ||
+                        ""
+                    )}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>مسیر تصویر با کیفیت</label>
+
+                <input
+                    id="f_high_res"
+                    value="${escapeAttribute(
+                        item.high_res ||
+                        ""
+                    )}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="btn-primary"
+                onclick="saveCurrent()"
+            >
+                ذخیره اثر
+            </button>
+
+            <button
+                class="btn-secondary"
+                onclick="duplicateHighRes()"
+            >
+                کپی مسیر بندانگشتی به تصویر با کیفیت
+            </button>
+
+            <button
+                class="btn-red"
+                onclick="deleteCurrent()"
+            >
+                حذف اثر
+            </button>
+
+        </div>
+
+    `;
+
+    renderList();
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveCurrent() {
+
+    if (currentIndex === null) {
+        return;
+    }
+
+    const item =
+        artworks[currentIndex];
+
+
+    item.id =
+        document
+            .getElementById("f_id")
+            .value
+            .trim();
+
+
+    item.date =
+        document
+            .getElementById("f_date")
+            .value
+            .trim() || null;
+
+
+    item.year =
+        document
+            .getElementById("f_year")
+            .value
+            .trim();
+
+
+    item.poem_text =
+        document
+            .getElementById("f_poem_text")
+            .value;
+
+
+    item.description =
+        document
+            .getElementById("f_description")
+            .value;
+
+
+    item.poets =
+        splitValues(
+            document
+                .getElementById("f_poets")
+                .value
+        );
+
+
+    item.calligraphers =
+        splitValues(
+            document
+                .getElementById("f_calligraphers")
+                .value
+        );
+
+
+    item.scripts =
+        splitValues(
+            document
+                .getElementById("f_scripts")
+                .value
+        );
+
+
+    item.formats =
+        splitValues(
+            document
+                .getElementById("f_formats")
+                .value
+        );
+
+
+    item.techniques =
+        splitValues(
+            document
+                .getElementById("f_techniques")
+                .value
+        );
+
+
+    item.periods =
+        splitValues(
+            document
+                .getElementById("f_periods")
+                .value
+        );
+
+
+    item.places =
+        splitValues(
+            document
+                .getElementById("f_places")
+                .value
+        );
+
+
+    item.other_tags =
+        splitValues(
+            document
+                .getElementById("f_other_tags")
+                .value
+        );
+
+
+    item.poem_source =
+        document
+            .getElementById("f_poem_source")
+            .value
+            .trim();
+
+
+    item.image_source =
+        document
+            .getElementById("f_image_source")
+            .value
+            .trim();
+
+
+    item.additional_source =
+        document
+            .getElementById("f_additional_source")
+            .value
+            .trim();
+
+
+    /*
+     * Remove the old field from edited records.
+     */
+    delete item.source;
+
+
+    item.thumbnail =
+        document
+            .getElementById("f_thumbnail")
+            .value
+            .trim();
+
+
+    item.high_res =
+        document
+            .getElementById("f_high_res")
+            .value
+            .trim();
+
+
+    document
+        .getElementById("status")
+        .textContent =
+        "تغییرات این اثر ذخیره شد. برای ذخیره دائمی فایل، روی «دانلود JSON» بزن.";
+
+
+    renderList();
+
+    alert("تغییرات ذخیره شد.");
+}
+
+
+/* =========================================================
+   DUPLICATE THUMBNAIL
+========================================================= */
+
+function duplicateHighRes() {
+
+    const thumbnail =
+        document
+            .getElementById("f_thumbnail")
+            .value;
+
+    document
+        .getElementById("f_high_res")
+        .value =
+        thumbnail;
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+function deleteCurrent() {
+
+    if (currentIndex === null) {
+        return;
+    }
+
+    if (
+        !confirm(
+            "آیا مطمئن هستید که می‌خواهید این اثر حذف شود؟"
+        )
+    ) {
+        return;
+    }
+
+    artworks.splice(
+        currentIndex,
+        1
+    );
+
+    currentIndex = null;
+
+    document
+        .getElementById("editor")
+        .innerHTML = `
+            <div class="empty">
+                اثر حذف شد.
+            </div>
+        `;
+
+    renderList();
+
+    document
+        .getElementById("status")
+        .textContent =
+        "اثر حذف شد. برای اعمال دائمی تغییرات، JSON جدید را دانلود کنید.";
+}
+
+
+/* =========================================================
+   DOWNLOAD JSON
+========================================================= */
+
+function downloadJSON() {
+
+    /*
+     * Clean the old "source" field from every record
+     * before exporting.
+     */
+    const exportData =
+        artworks.map(item => {
+
+            const cleanItem = {
+                ...item,
+
+                year: item.year || "",
+
+                poem_source:
+                    item.poem_source ||
+                    item.source ||
+                    "",
+
+                image_source:
+                    item.image_source ||
+                    "",
+
+                additional_source:
+                    item.additional_source ||
+                    ""
+            };
+
+            delete cleanItem.source;
+
+            return cleanItem;
+        });
+
+
+    const json =
+        JSON.stringify(
+            exportData,
+            null,
+            2
+        );
+
+
+    const blob =
+        new Blob(
+            [json],
+            {
+                type:
+                    "application/json;charset=utf-8"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        "artworks_final.json";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+
+    document
+        .getElementById("status")
+        .textContent =
+        "artworks_final.json دانلود شد. اکنون آن را جایگزین فایل قبلی در Repository کنید.";
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function splitValues(value) {
+
+    return String(value)
+        .split(/[,،]/)
+        .map(x => x.trim())
+        .filter(Boolean);
+}
+
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHTML(value);
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadData();
+
 </script>
+
 </body>
 </html>

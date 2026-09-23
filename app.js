@@ -1,1026 +1,119 @@
-let artworks = [];
-let filteredArtworks = [];
+let artworks=[];
+let filteredArtworks=[];
+let currentLanguage=localStorage.getItem('kelk_language')||'fa';
 
-let currentLanguage = "fa";
+const $=id=>document.getElementById(id);
+const gallery=$('gallery'), count=$('count'), searchInput=$('search');
+const poetFilter=$('poetFilter'), artistFilter=$('artistFilter'), scriptFilter=$('scriptFilter'), formatFilter=$('formatFilter'), periodFilter=$('periodFilter');
+const languageToggle=$('languageToggle');
 
-const gallery = document.getElementById("gallery");
-const count = document.getElementById("count");
-
-const searchInput = document.getElementById("search");
-const poetFilter = document.getElementById("poetFilter");
-const artistFilter = document.getElementById("artistFilter");
-const formatFilter = document.getElementById("formatFilter");
-const languageToggle = document.getElementById("languageToggle");
-
-
-/* =========================================
-   Format labels
-========================================= */
-
-const formatLabels = {
-    "Satr": "سطر",
-    "Chalipa": "چلیپا",
-    "Siyah Mashq": "سیاه‌مشق",
-    "Daftari": "دفتری",
-    "Qet'e": "قطعه",
-    "Shekasteh": "شکسته",
-    "Nasta'liq": "نستعلیق",
-    "Shekasteh-Nasta'liq": "شکسته‌نستعلیق",
-    "Mofradat": "مفردات",
-    "Tarkib": "ترکیب",
-    "Jali": "جلی"
+const labels={
+ fa:{title:'کلک دبیر',subtitle:'درگاه مشق نظری نستعلیق',desc:'«کلک دبیر» درگاهی است برای مشق نظری خوشنویسی که با قابلیت جستجو، امکان دسترسی سریع را به ترکیب انتخابی بزرگان نستعلیق و شکسته‌نستعلیق از کلمات و عبارات فراهم می‌کند.',search:'جستجو در شعر، شاعر، خوشنویس، خط، قالب، دوره، مکان و منابع…',hint:'می‌توانید چند کلیدواژه را هم‌زمان جستجو کنید.',poets:'همه شاعران',artists:'همه خوشنویسان',scripts:'همه خطوط',formats:'همه قالب‌ها',periods:'همه دوره‌ها',count:'تعداد آثار',poet:'شاعر',artist:'خوشنویس',script:'خط',format:'قالب',year:'سال',period:'دوره',place:'مکان',tech:'تکنیک/تزئین',poemSource:'منبع شعر',imageSource:'منبع عکس',additionalSource:'منبع اضافه',description:'توضیحات',date:'تاریخ ثبت',view:'مشاهده اثر',none:'اثری با این مشخصات پیدا نشد.',noText:'بدون متن توصیفی',noData:'داده‌ای برای نمایش وجود ندارد.',close:'بستن',all:'همه',footer:'گرداننده: @sahhosseini',dataset:'آرشیو استخراج‌شده از نسخه پشتیبان تلگرام',open:'مشاهده منبع'},
+ en:{title:'Kelk Dabir',subtitle:'A Gateway to Theoretical Nastaliq Practice',desc:'Kelk Dabir is a searchable research archive for Persian calligraphy, providing access to selected compositions by masters of Nastaliq and Shekasteh-Nastaliq.',search:'Search poems, poets, calligraphers, scripts, formats, periods, places and sources…',hint:'Multiple keywords can be searched together.',poets:'All poets',artists:'All calligraphers',scripts:'All scripts',formats:'All formats',periods:'All periods',count:'Artworks',poet:'Poet',artist:'Calligrapher',script:'Script',format:'Format',year:'Year',period:'Period',place:'Place',tech:'Technique / ornament',poemSource:'Poem source',imageSource:'Image source',additionalSource:'Additional source',description:'Description',date:'Archive date',view:'View artwork',none:'No artworks found.',noText:'No descriptive text',noData:'No data available.',close:'Close',all:'All',footer:'Curated by: @sahhosseini',dataset:'Extracted from the Telegram backup',open:'Open source'}
 };
 
-const formatLabelsEnglish = {
-    "Satr": "Satr",
-    "Chalipa": "Chalipa",
-    "Siyah Mashq": "Siyah Mashq",
-    "Daftari": "Daftari",
-    "Qet'e": "Qet'e",
-    "Shekasteh": "Shekasteh",
-    "Nasta'liq": "Nasta'liq",
-    "Shekasteh-Nasta'liq": "Shekasteh-Nasta'liq",
-    "Mofradat": "Mofradat",
-    "Tarkib": "Tarkib",
-    "Jali": "Jali"
-};
+const formatLabels={"Satr":'سطر',"سطر":'سطر',"Chalipa":'چلیپا',"چلیپا":'چلیپا',"Siyah Mashq":'سیاه‌مشق',"سیاه‌مشق":'سیاه‌مشق',"Daftari":'دفتری',"دفتری":'دفتری',"Qet'e":'قطعه',"قطعه":'قطعه',"Shekasteh":'شکسته',"Nasta'liq":'نستعلیق',"Nastaliq":'نستعلیق',"Mofrad":'مفرد',"Moraqqa":'مرقع',"Morakkab":'مرکب'};
+const scriptLabels={"Nasta’liq":'نستعلیق',"Nasta'liq":'نستعلیق',"Nastaliq":'نستعلیق',"Shekasteh":'شکسته'};
 
+function langArr(item,field){
+  const en=item[field+'_en'];
+  const fa=item[field];
+  return currentLanguage==='en' ? (Array.isArray(en)&&en.length?en:fa||[]) : (fa||[]);
+}
+function displayValue(item,field){return langArr(item,field).join(currentLanguage==='fa'?'، ':', ')}
+function normalize(text){return String(text??'').toLowerCase().normalize('NFKC').replace(/ي/g,'ی').replace(/ى/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\u200f]/g,' ').replace(/\s+/g,' ').trim();}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-/* =========================================
-   Script labels
-========================================= */
-
-const scriptLabels = {
-    "Nasta'liq": "نستعلیق",
-    "Shekasteh": "شکسته",
-    "Shikasteh": "شکسته",
-    "Shekasteh-Nasta'liq": "شکسته‌نستعلیق"
-};
-
-
-/* =========================================
-   Load data
-========================================= */
-
-fetch("artworks_final.json?t=" + Date.now())
-    .then(response => {
-
-        if (!response.ok) {
-            throw new Error("Could not load artworks_final.json");
-        }
-
-        return response.json();
-    })
-    .then(data => {
-
-        artworks = Array.isArray(data) ? data : [];
-
-        filteredArtworks = [...artworks];
-
-        populateFilters();
-        renderGallery();
-    })
-    .catch(error => {
-
-        console.error(error);
-
-        gallery.innerHTML = `
-            <div class="load-error">
-                خطا در بارگذاری آثار
-            </div>
-        `;
-    });
-
-
-/* =========================================
-   Counts
-========================================= */
-
-function getCounts(field) {
-
-    const counts = new Map();
-
-    artworks.forEach(artwork => {
-
-        const values = artwork[field] || [];
-
-        values.forEach(value => {
-
-            if (!value) return;
-
-            counts.set(
-                value,
-                (counts.get(value) || 0) + 1
-            );
-        });
-    });
-
-    return counts;
+async function loadData(){
+  try{
+    const r=await fetch('artworks_final.json?t='+Date.now());
+    if(!r.ok) throw new Error('artworks_final.json');
+    artworks=await r.json();
+    artworks=Array.isArray(artworks)?artworks:[];
+    filteredArtworks=[...artworks];
+    populateFilters(); renderGallery(); updateLanguageUI();
+  }catch(e){console.error(e);gallery.innerHTML='<div class="load-error">'+labels[currentLanguage].noData+'</div>';}
 }
 
-
-/* =========================================
-   Filters
-   Sorted by number of artworks
-========================================= */
-
-function populateFilters() {
-
-    fillSelect(
-        poetFilter,
-        getCounts("poets"),
-        currentLanguage === "fa"
-            ? "همه شاعران"
-            : "All poets"
-    );
-
-    fillSelect(
-        artistFilter,
-        getCounts("calligraphers"),
-        currentLanguage === "fa"
-            ? "همه خوشنویسان"
-            : "All calligraphers"
-    );
-
-    fillSelect(
-        formatFilter,
-        getCounts("formats"),
-        currentLanguage === "fa"
-            ? "همه قالب‌ها"
-            : "All formats",
-        true
-    );
+function counts(field){
+ const m=new Map(); artworks.forEach(a=>{(a[field]||[]).forEach(v=>{if(v)m.set(v,(m.get(v)||0)+1);});}); return m;
+}
+function fillSelect(select,field,defaultLabel,translate=false){
+ const previous=select.value; select.innerHTML='';
+ const d=document.createElement('option'); d.value=''; d.textContent=defaultLabel; select.appendChild(d);
+ [...counts(field).entries()].sort((a,b)=>b[1]-a[1]||String(a[0]).localeCompare(String(b[0]),'fa')).forEach(([v,n])=>{
+  const o=document.createElement('option');o.value=v;
+  if(translate && currentLanguage==='fa') o.textContent=(formatLabels[v]||v)+' ('+n+')';
+  else if(currentLanguage==='en' && field==='formats') o.textContent=(v==='Satr'?'Satr':v==='Chalipa'?'Chalipa':v==='Siyah Mashq'?'Siyah Mashq':v==='Daftari'?'Daftari':v)+` (${n})`;
+  else {
+    let en=v;
+    artworks.some(a=>{const idx=(a[field]||[]).indexOf(v); if(idx>=0){const arr=a[field+'_en']; if(arr?.[idx]) en=arr[idx]; return true;} return false;});
+    o.textContent=(currentLanguage==='en'?en:v)+` (${n})`;
+  }
+  select.appendChild(o);
+ });
+ if([...select.options].some(o=>o.value===previous)) select.value=previous;
+}
+function populateFilters(){
+ fillSelect(poetFilter,'poets',labels[currentLanguage].poets);fillSelect(artistFilter,'calligraphers',labels[currentLanguage].artists);fillSelect(scriptFilter,'scripts',labels[currentLanguage].scripts);fillSelect(formatFilter,'formats',labels[currentLanguage].formats,true);fillSelect(periodFilter,'periods',labels[currentLanguage].periods);
 }
 
-
-function fillSelect(
-    select,
-    counts,
-    defaultLabel,
-    translateFormats = false
-) {
-
-    select.innerHTML = "";
-
-    const defaultOption =
-        document.createElement("option");
-
-    defaultOption.value = "";
-    defaultOption.textContent = defaultLabel;
-
-    select.appendChild(defaultOption);
-
-    const values =
-        [...counts.entries()]
-            .sort((a, b) => {
-
-                if (b[1] !== a[1]) {
-                    return b[1] - a[1];
-                }
-
-                return a[0].localeCompare(
-                    b[0],
-                    "fa"
-                );
-            });
-
-    values.forEach(([value, count]) => {
-
-        const option =
-            document.createElement("option");
-
-        option.value = value;
-
-        let label = value;
-
-        if (translateFormats) {
-
-            label =
-                currentLanguage === "fa"
-                    ? (formatLabels[value] || value)
-                    : (formatLabelsEnglish[value] || value);
-        }
-
-        option.textContent =
-            `${label} (${count})`;
-
-        select.appendChild(option);
-    });
+function applyFilters(){
+ const terms=normalize(searchInput.value).split(' ').filter(Boolean);
+ const poet=poetFilter.value, artist=artistFilter.value, script=scriptFilter.value, format=formatFilter.value, period=periodFilter.value;
+ filteredArtworks=artworks.filter(a=>{
+  const searchable=normalize([
+   a.poem_text,a.text,a.description,a.year,a.date,a.poem_source,a.image_source,a.additional_source,a.source,
+   ...(a.poem_sources||[]).flatMap(x=>[x.label,x.url]),...(a.hashtags||[]),...(a.poets||[]),...(a.poets_en||[]),...(a.calligraphers||[]),...(a.calligraphers_en||[]),...(a.scripts||[]),...(a.scripts_en||[]),...(a.formats||[]),...(a.formats_en||[]),...(a.techniques||[]),...(a.techniques_en||[]),...(a.periods||[]),...(a.periods_en||[]),...(a.places||[]),...(a.places_en||[]),...(a.other_tags||[])
+  ].join(' '));
+  return terms.every(t=>searchable.includes(t)) && (!poet||(a.poets||[]).includes(poet)) && (!artist||(a.calligraphers||[]).includes(artist)) && (!script||(a.scripts||[]).includes(script)) && (!format||(a.formats||[]).includes(format)) && (!period||(a.periods||[]).includes(period));
+ });
+ renderGallery();
 }
 
+function renderGallery(){
+ gallery.innerHTML='';
+ count.textContent=`${labels[currentLanguage].count}: ${filteredArtworks.length.toLocaleString(currentLanguage==='fa'?'fa-IR':'en-US')}`;
+ if(!filteredArtworks.length){gallery.innerHTML=`<div class="no-results">${labels[currentLanguage].none}</div>`;return;}
+ filteredArtworks.forEach(a=>gallery.appendChild(card(a)));
+}
+function card(a){
+ const article=document.createElement('article');article.className='artwork-card';
+ const img=document.createElement('img');img.loading='lazy';img.src=a.thumbnail||a.high_res||'';img.alt=displayValue(a,'calligraphers')||'Persian calligraphy';img.onerror=()=>img.classList.add('image-missing');
+ const info=document.createElement('div');info.className='artwork-info';
+ const title=document.createElement('h3');title.textContent=preview(a.poem_text||a.text||labels[currentLanguage].noText);info.appendChild(title);
+ addCard(info,labels[currentLanguage].poet,displayValue(a,'poets'));addCard(info,labels[currentLanguage].artist,displayValue(a,'calligraphers'));addCard(info,labels[currentLanguage].format,displayValue(a,'formats'));addCard(info,labels[currentLanguage].year,a.year);
+ const b=document.createElement('button');b.className='view-button';b.textContent=labels[currentLanguage].view;b.onclick=()=>openArtwork(a);info.appendChild(b);
+ article.append(img,info);return article;
+}
+function addCard(c,label,value){if(!value)return;const p=document.createElement('p');p.innerHTML=`<strong>${esc(label)}:</strong> ${esc(value)}`;c.appendChild(p);}
+function preview(t){t=String(t||'').trim().replace(/\s+/g,' ');return t.length>105?t.slice(0,105)+'…':t;}
 
-/* =========================================
-   Search
-========================================= */
-
-function applyFilters() {
-
-    const query =
-        normalize(searchInput.value);
-
-    const poet =
-        poetFilter.value;
-
-    const artist =
-        artistFilter.value;
-
-    const format =
-        formatFilter.value;
-
-
-    filteredArtworks =
-        artworks.filter(artwork => {
-
-            const searchableText =
-                normalize([
-
-                    artwork.poem_text || "",
-                    artwork.text || "",
-                    artwork.description || "",
-
-                    ...(artwork.poets || []),
-                    ...(artwork.calligraphers || []),
-                    ...(artwork.scripts || []),
-                    ...(artwork.formats || []),
-                    ...(artwork.techniques || []),
-                    ...(artwork.periods || []),
-                    ...(artwork.places || []),
-                    ...(artwork.other_tags || []),
-
-                    artwork.year || "",
-                    artwork.poem_source || "",
-                    artwork.image_source || "",
-                    artwork.additional_source || ""
-
-                ].join(" "));
-
-
-            const matchesSearch =
-                !query ||
-                searchableText.includes(query);
-
-
-            const matchesPoet =
-                !poet ||
-                (artwork.poets || [])
-                    .includes(poet);
-
-
-            const matchesArtist =
-                !artist ||
-                (artwork.calligraphers || [])
-                    .includes(artist);
-
-
-            const matchesFormat =
-                !format ||
-                (artwork.formats || [])
-                    .includes(format);
-
-
-            return (
-                matchesSearch &&
-                matchesPoet &&
-                matchesArtist &&
-                matchesFormat
-            );
-        });
-
-
-    renderGallery();
+function addDetail(c,label,value){if(!value)return;const p=document.createElement('p');p.className='detail-row';p.innerHTML=`<strong>${esc(label)}:</strong> <span>${esc(value).replace(/\n/g,'<br>')}</span>`;c.appendChild(p);}
+function addLinks(c,label,items,legacy){
+ const arr=Array.isArray(items)?items.filter(x=>x&&x.url):[];
+ if(!arr.length && legacy){
+  const parts=String(legacy).split(/\s*\|\s*/).filter(Boolean);if(parts.length){addDetail(c,label,legacy);return;}
+ }
+ if(!arr.length)return;
+ const p=document.createElement('p');p.className='detail-row';const strong=document.createElement('strong');strong.textContent=label+':';p.appendChild(strong);
+ const wrap=document.createElement('span');wrap.className='source-links';arr.forEach((x,i)=>{if(i)wrap.append(' · ');const a=document.createElement('a');a.href=x.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=x.label||labels[currentLanguage].open;wrap.appendChild(a);});p.appendChild(wrap);c.appendChild(p);
+}
+function openArtwork(a){
+ const modal=document.createElement('div');modal.className='artwork-modal';
+ const inner=document.createElement('div');inner.className='modal-inner';
+ const close=document.createElement('button');close.className='modal-close';close.type='button';close.textContent='×';close.title=labels[currentLanguage].close;close.onclick=()=>modal.remove();
+ const img=document.createElement('img');img.className='high-res-image';img.src=a.high_res||a.thumbnail||'';img.alt=displayValue(a,'calligraphers')||'Persian calligraphy';
+ const details=document.createElement('div');details.className='modal-details';
+ addDetail(details,currentLanguage==='fa'?'متن':'Text',a.poem_text||a.text);addDetail(details,labels[currentLanguage].poet,displayValue(a,'poets'));addDetail(details,labels[currentLanguage].artist,displayValue(a,'calligraphers'));addDetail(details,labels[currentLanguage].script,displayValue(a,'scripts'));addDetail(details,labels[currentLanguage].format,displayValue(a,'formats'));addDetail(details,labels[currentLanguage].tech,displayValue(a,'techniques'));addDetail(details,labels[currentLanguage].year,a.year);addDetail(details,labels[currentLanguage].period,displayValue(a,'periods'));addDetail(details,labels[currentLanguage].place,displayValue(a,'places'));addDetail(details,labels[currentLanguage].description,a.description);addLinks(details,labels[currentLanguage].poemSource,a.poem_sources,a.poem_source);addDetail(details,labels[currentLanguage].imageSource,a.image_source);addDetail(details,labels[currentLanguage].additionalSource,a.additional_source);addDetail(details,labels[currentLanguage].date,a.date);
+ inner.append(close,img,details);modal.appendChild(inner);document.body.appendChild(modal);modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+ const escHandler=e=>{if(e.key==='Escape'){modal.remove();document.removeEventListener('keydown',escHandler);}};document.addEventListener('keydown',escHandler);
 }
 
-
-/* =========================================
-   Persian normalization
-========================================= */
-
-function normalize(text) {
-
-    return String(text)
-
-        .toLowerCase()
-
-        .replace(/ي/g, "ی")
-        .replace(/ى/g, "ی")
-        .replace(/ك/g, "ک")
-
-        .replace(/\u200c/g, " ")
-
-        .replace(/\s+/g, " ")
-
-        .trim();
+function updateLanguageUI(){
+ const l=labels[currentLanguage];document.documentElement.lang=currentLanguage;document.documentElement.dir=currentLanguage==='fa'?'rtl':'ltr';$('siteTitle').textContent=l.title;$('siteSubtitle').textContent=l.subtitle;$('siteDescription').textContent=l.desc;$('searchHint').textContent=l.hint;$('footerText').textContent=l.footer;$('datasetInfo').textContent=l.dataset;searchInput.placeholder=l.search;languageToggle.textContent=currentLanguage==='fa'?'English':'فارسی';populateFilters();renderGallery();
 }
 
-
-/* =========================================
-   Gallery
-========================================= */
-
-function renderGallery() {
-
-    gallery.innerHTML = "";
-
-    count.textContent =
-        currentLanguage === "fa"
-
-            ? `تعداد آثار: ${filteredArtworks.length.toLocaleString("fa-IR")}`
-
-            : `Artworks: ${filteredArtworks.length.toLocaleString("en-US")}`;
-
-
-    if (filteredArtworks.length === 0) {
-
-        gallery.innerHTML = `
-            <div class="no-results">
-                ${
-                    currentLanguage === "fa"
-                        ? "اثری با این مشخصات پیدا نشد."
-                        : "No artworks found."
-                }
-            </div>
-        `;
-
-        return;
-    }
-
-
-    filteredArtworks.forEach(artwork => {
-
-        gallery.appendChild(
-            createArtworkCard(artwork)
-        );
-    });
-}
-
-
-/* =========================================
-   Artwork card
-========================================= */
-
-function createArtworkCard(artwork) {
-
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "artwork-card";
-
-
-    const image =
-        document.createElement("img");
-
-    image.src =
-        artwork.thumbnail ||
-        artwork.high_res ||
-        "";
-
-    image.alt =
-        artwork.calligraphers?.length
-            ? artwork.calligraphers.join("، ")
-            : "Persian calligraphy";
-
-    image.loading = "lazy";
-
-    image.onerror = function () {
-        this.style.display = "none";
-    };
-
-
-    const info =
-        document.createElement("div");
-
-    info.className =
-        "artwork-info";
-
-
-    const title =
-        document.createElement("h3");
-
-    title.textContent =
-        makePreviewText(
-            artwork.poem_text ||
-            artwork.text ||
-            ""
-        );
-
-    info.appendChild(title);
-
-
-    if (artwork.poets?.length) {
-
-        addCardDetail(
-            info,
-            currentLanguage === "fa"
-                ? "شاعر"
-                : "Poet",
-            artwork.poets.join("، ")
-        );
-    }
-
-
-    if (artwork.calligraphers?.length) {
-
-        addCardDetail(
-            info,
-            currentLanguage === "fa"
-                ? "خوشنویس"
-                : "Calligrapher",
-            artwork.calligraphers.join("، ")
-        );
-    }
-
-
-    if (artwork.formats?.length) {
-
-        const formats =
-            artwork.formats
-                .map(format =>
-
-                    currentLanguage === "fa"
-                        ? (formatLabels[format] || format)
-                        : (formatLabelsEnglish[format] || format)
-
-                )
-                .join("، ");
-
-
-        addCardDetail(
-            info,
-            currentLanguage === "fa"
-                ? "قالب"
-                : "Format",
-            formats
-        );
-    }
-
-
-    if (artwork.year) {
-
-        addCardDetail(
-            info,
-            currentLanguage === "fa"
-                ? "سال"
-                : "Year",
-            artwork.year
-        );
-    }
-
-
-    const buttonContainer =
-        document.createElement("div");
-
-    buttonContainer.className =
-        "view-artwork";
-
-
-    const button =
-        document.createElement("button");
-
-    button.textContent =
-        currentLanguage === "fa"
-            ? "مشاهده اثر"
-            : "View artwork";
-
-    button.onclick =
-        () => openArtwork(artwork);
-
-    buttonContainer.appendChild(button);
-
-    info.appendChild(buttonContainer);
-
-    card.appendChild(image);
-    card.appendChild(info);
-
-    return card;
-}
-
-
-/* =========================================
-   Card detail
-========================================= */
-
-function addCardDetail(
-    container,
-    label,
-    value
-) {
-
-    const p =
-        document.createElement("p");
-
-    p.innerHTML =
-        `<strong>${escapeHTML(label)}:</strong>
-         ${escapeHTML(value)}`;
-
-    container.appendChild(p);
-}
-
-
-/* =========================================
-   Preview
-========================================= */
-
-function makePreviewText(text) {
-
-    if (!text) {
-
-        return currentLanguage === "fa"
-            ? "بدون توضیح"
-            : "No description";
-    }
-
-    const clean =
-        String(text).trim();
-
-    if (clean.length <= 100) {
-        return clean;
-    }
-
-    return clean.substring(0, 100) + "…";
-}
-
-
-/* =========================================
-   Artwork modal
-========================================= */
-
-function openArtwork(artwork) {
-
-    const modal =
-        document.createElement("div");
-
-    modal.className =
-        "artwork-modal";
-
-
-    const inner =
-        document.createElement("div");
-
-    inner.className =
-        "modal-inner";
-
-
-    const close =
-        document.createElement("button");
-
-    close.className =
-        "modal-close";
-
-    close.innerHTML = "×";
-
-    close.onclick =
-        () => modal.remove();
-
-
-    const image =
-        document.createElement("img");
-
-    image.className =
-        "high-res-image";
-
-    image.src =
-        artwork.high_res ||
-        artwork.thumbnail ||
-        "";
-
-    image.alt =
-        artwork.calligraphers?.join("، ")
-        || "Persian calligraphy";
-
-
-    const details =
-        document.createElement("div");
-
-    details.className =
-        "modal-details";
-
-
-    /* Poem */
-
-    if (
-        artwork.poem_text ||
-        artwork.text
-    ) {
-
-        const poem =
-            document.createElement("div");
-
-        poem.className =
-            "poem";
-
-        poem.textContent =
-            artwork.poem_text ||
-            artwork.text;
-
-        details.appendChild(poem);
-    }
-
-
-    /* Poet */
-
-    if (artwork.poets?.length) {
-
-        addDetail(
-            details,
-            currentLanguage === "fa"
-                ? "شاعر"
-                : "Poet",
-            artwork.poets.join("، ")
-        );
-    }
-
-
-    /* Calligrapher */
-
-    if (artwork.calligraphers?.length) {
-
-        addDetail(
-            details,
-            currentLanguage === "fa"
-                ? "خوشنویس"
-                : "Calligrapher",
-            artwork.calligraphers.join("، ")
-        );
-    }
-
-
-    /* Script */
-
-    if (artwork.scripts?.length) {
-
-        const scripts =
-            artwork.scripts
-                .map(script =>
-
-                    currentLanguage === "fa"
-                        ? (scriptLabels[script] || script)
-                        : script
-
-                )
-                .join("، ");
-
-        addDetail(
-            details,
-            currentLanguage === "fa"
-                ? "خط"
-                : "Script",
-            scripts
-        );
-    }
-
-
-    /* Format */
-
-    if (artwork.formats?.length) {
-
-        const formats =
-            artwork.formats
-                .map(format =>
-
-                    currentLanguage === "fa"
-                        ? (formatLabels[format] || format)
-                        : (formatLabelsEnglish[format] || format)
-
-                )
-                .join("، ");
-
-        addDetail(
-            details,
-            currentLanguage === "fa"
-                ? "قالب"
-                : "Format",
-            formats
-        );
-    }
-
-
-    /* Year */
-
-    if (artwork.year) {
-
-        addDetail(
-            details,
-            currentLanguage === "fa"
-                ? "سال"
-                : "Year",
-            artwork.year
-        );
-    }
-
-
-    /* Period */
-
-    if (artwork.periods?.length) {
-
-        addDetail(
-            details,
-            currentLanguage === "fa"
-                ? "دوره"
-                : "Period",
-            artwork.periods.join("، ")
-        );
-    }
-
-
-    /* Poem source */
-
-    if (artwork.poem_source) {
-
-        addSourceDetail(
-            details,
-            currentLanguage === "fa"
-                ? "منبع شعر"
-                : "Poem source",
-            artwork.poem_source
-        );
-    }
-
-
-    /* Image source */
-
-    if (artwork.image_source) {
-
-        addSourceDetail(
-            details,
-            currentLanguage === "fa"
-                ? "منبع عکس"
-                : "Image source",
-            artwork.image_source
-        );
-    }
-
-
-    /* Additional source */
-
-    if (artwork.additional_source) {
-
-        addSourceDetail(
-            details,
-            currentLanguage === "fa"
-                ? "منبع اضافه"
-                : "Additional source",
-            artwork.additional_source
-        );
-    }
-
-
-    /* Description */
-
-    if (artwork.description) {
-
-        addDetail(
-            details,
-            currentLanguage === "fa"
-                ? "توضیحات"
-                : "Description",
-            artwork.description
-        );
-    }
-
-
-    /* Date */
-
-    if (artwork.date) {
-
-        addDetail(
-            details,
-            currentLanguage === "fa"
-                ? "تاریخ ثبت"
-                : "Date",
-            artwork.date
-        );
-    }
-
-
-    inner.appendChild(close);
-    inner.appendChild(image);
-    inner.appendChild(details);
-
-    modal.appendChild(inner);
-
-    document.body.appendChild(modal);
-
-
-    modal.addEventListener(
-        "click",
-        event => {
-
-            if (event.target === modal) {
-                modal.remove();
-            }
-        }
-    );
-
-
-    function escHandler(event) {
-
-        if (event.key === "Escape") {
-
-            modal.remove();
-
-            document.removeEventListener(
-                "keydown",
-                escHandler
-            );
-        }
-    }
-
-    document.addEventListener(
-        "keydown",
-        escHandler
-    );
-}
-
-
-/* =========================================
-   Detail
-========================================= */
-
-function addDetail(
-    container,
-    label,
-    value
-) {
-
-    const p =
-        document.createElement("p");
-
-    p.innerHTML =
-        `<strong>${escapeHTML(label)}:</strong>
-         ${escapeHTML(value)}`;
-
-    container.appendChild(p);
-}
-
-
-/* =========================================
-   Source detail
-========================================= */
-
-function addSourceDetail(
-    container,
-    label,
-    value
-) {
-
-    const p =
-        document.createElement("p");
-
-    const strong =
-        document.createElement("strong");
-
-    strong.textContent =
-        `${label}:`;
-
-    p.appendChild(strong);
-    p.appendChild(
-        document.createTextNode(" ")
-    );
-
-
-    const valueString =
-        String(value).trim();
-
-
-    if (
-        /^https?:\/\//i.test(valueString)
-    ) {
-
-        const link =
-            document.createElement("a");
-
-        link.className =
-            "source-link";
-
-        link.href =
-            valueString;
-
-        link.target =
-            "_blank";
-
-        link.rel =
-            "noopener noreferrer";
-
-        link.textContent =
-            currentLanguage === "fa"
-                ? "مشاهده منبع"
-                : "Open source";
-
-        p.appendChild(link);
-
-    } else {
-
-        p.appendChild(
-            document.createTextNode(
-                valueString
-            )
-        );
-    }
-
-
-    container.appendChild(p);
-}
-
-
-/* =========================================
-   HTML escape
-========================================= */
-
-function escapeHTML(value) {
-
-    return String(value)
-
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================================
-   Language
-========================================= */
-
-function updateLanguage() {
-
-    const elements =
-        document.querySelectorAll(
-            "[data-fa]"
-        );
-
-
-    elements.forEach(element => {
-
-        element.textContent =
-            currentLanguage === "fa"
-                ? element.dataset.fa
-                : element.dataset.en;
-    });
-
-
-    document.documentElement.lang =
-        currentLanguage;
-
-    document.documentElement.dir =
-        currentLanguage === "fa"
-            ? "rtl"
-            : "ltr";
-
-
-    searchInput.placeholder =
-        currentLanguage === "fa"
-
-            ? "جستجو در شعر، شاعر، خوشنویس، خط و قالب..."
-
-            : "Search poems, poets, calligraphers, scripts and formats...";
-
-
-    languageToggle.textContent =
-        currentLanguage === "fa"
-            ? "English"
-            : "فارسی";
-
-
-    populateFilters();
-    renderGallery();
-}
-
-
-/* =========================================
-   Events
-========================================= */
-
-searchInput.addEventListener(
-    "input",
-    applyFilters
-);
-
-poetFilter.addEventListener(
-    "change",
-    applyFilters
-);
-
-artistFilter.addEventListener(
-    "change",
-    applyFilters
-);
-
-formatFilter.addEventListener(
-    "change",
-    applyFilters
-);
-
-languageToggle.addEventListener(
-    "click",
-    () => {
-
-        currentLanguage =
-            currentLanguage === "fa"
-                ? "en"
-                : "fa";
-
-        updateLanguage();
-    }
-);
+[searchInput,poetFilter,artistFilter,scriptFilter,formatFilter,periodFilter].forEach(el=>el.addEventListener(el.tagName==='INPUT'?'input':'change',applyFilters));
+languageToggle.addEventListener('click',()=>{currentLanguage=currentLanguage==='fa'?'en':'fa';localStorage.setItem('kelk_language',currentLanguage);updateLanguageUI();});
+loadData();
