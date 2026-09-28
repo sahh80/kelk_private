@@ -1,10 +1,14 @@
-KELK DABIR — SITE UPDATE
+# Kelk Dabir — final deployment package
 
-این بسته شامل فایل‌های جدید ساختار سایت است.
+This package is self-contained for GitHub Pages.
 
-ساختار اصلی سایت: نگارخانه، کتابخانه، رویدادها، درباره ما
-ترتیب فیلترهای نگارخانه: خوشنویس، شاعر، خط، قالب، تکنیک، دوره
-آثار در نگارخانه از جدیدترین تاریخ ثبت پست به قدیمی‌ترین مرتب می‌شوند.
-برای پست‌های قدیمی، اطلاعات Reply/Joined باید در مرحله استخراج داده در رکورد همان اثر ادغام شود.
+Top-level sections: Gallery, Library, Events, About.
+Gallery filters: Calligraphers, Poets, Scripts, Formats, Ornaments, Periods. Ornaments is multi-select.
 
-فایل‌ها را در ریشه repository جایگزین کنید. artworks_final.json در این بسته نیست و باید جداگانه، پس از اصلاح استخراج و تصاویر، جایگزین شود.
+Data is ordered newest Telegram post first. For older posts, direct replies and joined messages are folded into the artwork record where available.
+
+Source rule: Ganjoor links/text are treated as poem source; other external sites are treated as image/file source; contextual notes are additional source.
+
+Important: do not add a GitHub token to the repository. Use the admin page only with a short-lived fine-grained PAT entered locally in the browser.
+
+Deployment: copy all files/folders in this package into the repository root, replacing the corresponding site files, commit, and push to main.
